@@ -194,3 +194,23 @@ for i in range(4)
         assert valid is False
         assert len(evidences) == 0
         assert "SyntaxError at line 2" in err
+
+    def test_dead_code_loop_ignored(self):
+        """Loops placed inside obviously dead/unreachable branches (if False:) are not counted."""
+        source_code = """
+if False:
+    for i in range(4):
+        pass
+print("Hello World")
+"""
+        req = RequiredConcept(
+            concept=ConceptType.LOOP,
+            rule_id="rule_require_loop",
+            accepted_constructs=["for", "while"],
+            min_occurrences=1,
+        )
+
+        valid, evidences, err = ASTAnalyzer.evaluate_concepts(source_code, [req])
+        assert valid is True
+        assert evidences[0].passed is False
+        assert evidences[0].occurrences_found == 0

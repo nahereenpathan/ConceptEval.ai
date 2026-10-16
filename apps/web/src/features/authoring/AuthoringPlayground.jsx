@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Sparkles, CheckCircle2, AlertCircle, ShieldAlert, Cpu, ArrowRight } from 'lucide-react';
+import { api } from '../../api/client';
 
 export default function AuthoringPlayground() {
   const [problemPrompt, setProblemPrompt] = useState(
@@ -7,87 +8,27 @@ export default function AuthoringPlayground() {
   );
   const [extractionResult, setExtractionResult] = useState(null);
   const [extracting, setExtracting] = useState(false);
+  const [errorMsg, setErrorMsg] = useState(null);
 
-  // Client-side NLP extractor demo mirroring the backend NLP service
-  const handleExtract = () => {
+  // Calls the real FastAPI backend NLP Intent Service
+  const handleExtract = async () => {
     setExtracting(true);
-    const cleaned = problemPrompt.toLowerCase();
-    const concepts = [];
-    const prohibitions = [];
-    const notes = [];
-    let confidence = 0.95;
-
-    // Concepts
-    if (/using (a |the )?(loop|for loop|while loop)|iterate|iteration|looping/.test(cleaned)) {
-      concepts.push({
-        concept: 'loop',
-        accepted: ['for', 'while'],
-        desc: 'Requires iterative execution using a loop (for or while).',
-      });
-    }
-
-    if (/recursive|recursion|recursively|call(s)? itself/.test(cleaned)) {
-      concepts.push({
-        concept: 'recursion',
-        accepted: ['recursion'],
-        desc: 'Requires recursive function call with a base case.',
-      });
-    }
-
-    if (/list comprehension|dict comprehension/.test(cleaned)) {
-      concepts.push({
-        concept: 'comprehension',
-        accepted: ['list_comprehension', 'dict_comprehension'],
-        desc: 'Requires Python comprehension construct.',
-      });
-    }
-
-    // Prohibitions
-    if (/without (using )?loops?|no loops? allowed|do not use (a )?loop/.test(cleaned)) {
-      prohibitions.push({
-        construct: 'loop',
-        targets: ['for', 'while'],
-        desc: 'Loops are strictly prohibited.',
-      });
-    }
-
-    if (/without (using )?built-?in|do not use built-?in/.test(cleaned)) {
-      prohibitions.push({
-        construct: 'specific_builtin',
-        targets: ['reverse', 'reversed'],
-        desc: 'Built-in reversal functions prohibited.',
-      });
-    }
-
-    if (concepts.length === 0 && prohibitions.length === 0) {
-      confidence = 0.50;
-      notes.push('No explicit concept keywords detected. Problem will be graded on functional correctness only.');
-    }
-
-    const requiresReview = confidence < 0.80 || notes.length > 0;
-
-    const rubricDraft = {
-      schema_version: '1.0.0',
-      max_score: 100.0,
-      functional_weight: 40.0,
-      concept_weight: concepts.length > 0 ? 35.0 : 0.0,
-      algorithmic_weight: concepts.length > 0 ? 15.0 : 40.0,
-      constraint_weight: prohibitions.length > 0 ? 10.0 : 20.0,
-      required_concepts: concepts,
-      prohibited_constructs: prohibitions,
-    };
-
-    setTimeout(() => {
+    setErrorMsg(null);
+    try {
+      const data = await api.extractIntent(problemPrompt);
       setExtractionResult({
-        concepts,
-        prohibitions,
-        confidence,
-        requiresReview,
-        notes,
-        rubricDraft,
+        concepts: data.extracted_concepts,
+        prohibitions: data.extracted_prohibitions,
+        confidence: data.confidence,
+        requiresReview: data.requires_human_review,
+        notes: data.review_notes,
+        rubricDraft: data.rubric_draft,
       });
+    } catch (err) {
+      setErrorMsg(err.message || 'Intent extraction failed.');
+    } finally {
       setExtracting(false);
-    }, 300);
+    }
   };
 
   return (

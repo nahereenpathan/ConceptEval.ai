@@ -31,14 +31,30 @@ class LoopVisitor(BaseConceptVisitor):
     def __init__(self, source_lines: List[str]):
         super().__init__(source_lines)
         self.loop_stack: List[ast.AST] = []
+        self.dead_branch_depth = 0
         self.max_nesting_depth = 0
 
-    def is_inside_obviously_dead_code(self) -> bool:
-        """Check if current position is within a known trivial dead branch (e.g. if False:)."""
-        # NodeVisitor doesn't track full parents automatically unless we wrap or check
-        return False
+    def visit_If(self, node: ast.If):
+        # Detect trivially dead branches (e.g. if False:, if 0:, if None:)
+        is_falsy = False
+        if isinstance(node.test, ast.Constant) and not bool(node.test.value):
+            is_falsy = True
+
+        if is_falsy:
+            self.dead_branch_depth += 1
+            for item in node.body:
+                self.visit(item)
+            self.dead_branch_depth -= 1
+            for item in node.orelse:
+                self.visit(item)
+        else:
+            self.generic_visit(node)
 
     def visit_For(self, node: ast.For):
+        if self.dead_branch_depth > 0:
+            # Loop is inside obviously dead/unreachable code, ignore as concept compliance
+            return
+
         self.loop_stack.append(node)
         depth = len(self.loop_stack)
         if depth > self.max_nesting_depth:
@@ -66,6 +82,10 @@ class LoopVisitor(BaseConceptVisitor):
         self.loop_stack.pop()
 
     def visit_While(self, node: ast.While):
+        if self.dead_branch_depth > 0:
+            # While loop is inside obviously dead/unreachable code, ignore
+            return
+
         self.loop_stack.append(node)
         depth = len(self.loop_stack)
         if depth > self.max_nesting_depth:

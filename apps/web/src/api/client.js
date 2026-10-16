@@ -116,6 +116,14 @@ class ApiClient {
   async getUserSubmissions() {
     return this.request('/submissions');
   }
+
+  // Authoring & NLP Intent
+  async extractIntent(problemText) {
+    return this.request('/authoring/extract-intent', {
+      method: 'POST',
+      body: JSON.stringify({ problem_text: problemText }),
+    });
+  }
 }
 
 export const api = new ApiClient();
