@@ -5,6 +5,7 @@ Argon2id password hashing and JWT authentication tokens.
 
 from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, Optional
+import uuid
 import jwt
 from pwdlib import PasswordHash
 
@@ -31,6 +32,7 @@ def create_access_token(subject: str, extra_claims: Optional[Dict[str, Any]] = N
         "sub": str(subject),
         "exp": expire,
         "iat": datetime.now(timezone.utc),
+        "jti": uuid.uuid4().hex,
         "type": "access",
     }
     if extra_claims:
@@ -39,15 +41,17 @@ def create_access_token(subject: str, extra_claims: Optional[Dict[str, Any]] = N
 
 
 def create_refresh_token(subject: str) -> str:
-    """Generate a signed JWT refresh token."""
+    """Generate a signed JWT refresh token with unique jti claim."""
     expire = datetime.now(timezone.utc) + timedelta(days=settings.REFRESH_TOKEN_EXPIRE_DAYS)
     to_encode = {
         "sub": str(subject),
         "exp": expire,
         "iat": datetime.now(timezone.utc),
+        "jti": uuid.uuid4().hex,
         "type": "refresh",
     }
     return jwt.encode(to_encode, settings.APP_SECRET_KEY, algorithm=settings.JWT_ALGORITHM)
+
 
 
 def decode_token(token: str) -> Dict[str, Any]:

@@ -68,3 +68,29 @@ async def get_current_user(
         )
 
     return user
+
+
+async def get_current_user_optional(
+    db: Annotated[AsyncSession, Depends(get_db)],
+    token: Annotated[Optional[str], Depends(oauth2_scheme)],
+) -> Optional[User]:
+    """Extract authenticated user if valid token present, otherwise return None."""
+    if not token:
+        return None
+
+    try:
+        payload = decode_token(token)
+        user_id: str = payload.get("sub")
+        token_type: str = payload.get("type")
+        if not user_id or token_type != "access":
+            return None
+    except Exception:
+        return None
+
+    stmt = select(User).where(User.id == user_id)
+    user = (await db.execute(stmt)).scalar_one_or_none()
+
+    if not user or user.status != "active":
+        return None
+
+    return user

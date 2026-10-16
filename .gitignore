@@ -65,3 +65,21 @@ Thumbs.db
 .vscode/
 *.swp
 *.swo
+
+# Local database backups and reports
+*.db
+*.db-*
+*.sqlite
+*.sqlite3
+*.bak
+*.bak_*
+rubric_audit_report.txt
+
+# Python and frontend generated files
+__pycache__/
+.pytest_cache/
+.coverage
+node_modules/
+dist/
+
+

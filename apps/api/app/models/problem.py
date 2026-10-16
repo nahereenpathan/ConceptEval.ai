@@ -4,7 +4,7 @@ Problem Authoring, Versioning, Test Cases, and Rubrics
 
 from datetime import datetime
 from typing import Optional
-from sqlalchemy import Boolean, DateTime, Float, ForeignKey, Integer, String, Text, UniqueConstraint
+from sqlalchemy import Boolean, DateTime, Float, ForeignKey, Index, Integer, String, Text, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base, TimestampMixin, UUIDPrimaryKeyMixin
@@ -15,12 +15,19 @@ class Problem(Base, UUIDPrimaryKeyMixin, TimestampMixin):
     __tablename__ = "problems"
 
     owner_type: Mapped[str] = mapped_column(String(32), default="platform", nullable=False)  # platform, organization
-    owner_organization_id: Mapped[Optional[str]] = mapped_column(String(36), index=True, nullable=True)
+    owner_organization_id: Mapped[Optional[str]] = mapped_column(String(36), ForeignKey("organizations.id", ondelete="SET NULL"), index=True, nullable=True)
     slug: Mapped[str] = mapped_column(String(128), unique=True, index=True, nullable=False)
+    content_fingerprint: Mapped[Optional[str]] = mapped_column(String(64), index=True, nullable=True)
     status: Mapped[str] = mapped_column(String(32), default="draft", nullable=False)  # draft, published, archived
     created_by_user_id: Mapped[str] = mapped_column(String(36), ForeignKey("users.id"), nullable=False)
 
     versions = relationship("ProblemVersion", back_populates="problem", cascade="all, delete-orphan")
+    organization = relationship("Organization")
+
+    __table_args__ = (
+        Index("ix_problems_owner_org_status", "owner_organization_id", "status"),
+    )
+
 
 
 class ProblemVersion(Base, UUIDPrimaryKeyMixin, TimestampMixin):
@@ -36,7 +43,9 @@ class ProblemVersion(Base, UUIDPrimaryKeyMixin, TimestampMixin):
     constraints_json: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     input_format: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     output_format: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    starter_code: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     reference_solution: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    content_fingerprint: Mapped[Optional[str]] = mapped_column(String(64), index=True, nullable=True)
     published_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
 
     problem = relationship("Problem", back_populates="versions")
@@ -65,6 +74,7 @@ class ProblemTopicAssignment(Base, UUIDPrimaryKeyMixin):
     topic_id: Mapped[str] = mapped_column(String(36), ForeignKey("problem_topics.id", ondelete="CASCADE"), index=True, nullable=False)
 
     problem_version = relationship("ProblemVersion", back_populates="topic_assignments")
+    topic = relationship("ProblemTopic")
 
 
 class GradingRubric(Base, UUIDPrimaryKeyMixin, TimestampMixin):
@@ -114,3 +124,35 @@ class RubricExtractionRun(Base, UUIDPrimaryKeyMixin, TimestampMixin):
     confidence_metadata_json: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     validation_errors_json: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     status: Mapped[str] = mapped_column(String(32), default="completed", nullable=False)
+
+
+class ProblemBookmark(Base, UUIDPrimaryKeyMixin, TimestampMixin):
+    """Student problem bookmarks and saved practice lists."""
+    __tablename__ = "problem_bookmarks"
+
+    user_id: Mapped[str] = mapped_column(String(36), ForeignKey("users.id", ondelete="CASCADE"), index=True, nullable=False)
+    problem_id: Mapped[str] = mapped_column(String(36), ForeignKey("problems.id", ondelete="CASCADE"), index=True, nullable=False)
+
+    user = relationship("User")
+    problem = relationship("Problem")
+
+    __table_args__ = (
+        UniqueConstraint("user_id", "problem_id", name="uq_user_problem_bookmark"),
+    )
+
+
+class ContentImportAudit(Base, UUIDPrimaryKeyMixin, TimestampMixin):
+    """Provenance tracking and audit report for authorized dataset imports."""
+    __tablename__ = "content_import_audits"
+
+    imported_by_user_id: Mapped[str] = mapped_column(String(36), ForeignKey("users.id"), index=True, nullable=False)
+    source_name: Mapped[str] = mapped_column(String(255), nullable=False)
+    license_type: Mapped[str] = mapped_column(String(64), nullable=False)
+    provenance_url: Mapped[Optional[str]] = mapped_column(String(512), nullable=True)
+    format: Mapped[str] = mapped_column(String(32), default="json", nullable=False)
+    total_processed: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    imported_count: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    skipped_duplicates: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    errors_json: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    import_metadata_json: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+

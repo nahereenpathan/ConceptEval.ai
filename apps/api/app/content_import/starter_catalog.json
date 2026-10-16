@@ -1,0 +1,695 @@
+{
+  "source_name": "ConceptEval Original Pedagogical Python Starter Catalog",
+  "license_type": "CC-BY-4.0",
+  "provenance_url": "https://github.com/concepteval/starter-curriculum",
+  "problems": [
+    {
+      "title": "Filter Even Numbers with List Comprehension",
+      "slug": "filter-even-numbers-comprehension",
+      "statement_markdown": "### Problem Description\n\nWrite a Python program that reads a single line of space-separated integers from standard input, filters out all odd numbers, and prints the resulting list of even numbers.\n\n### Concept Requirement\nYou **must** use a Python **list comprehension** (`[x for x in ... if ...]`) to perform the filtering. Solutions using traditional `for` loops with `.append()` will fail the concept evaluation criteria.\n\n### Example 1\n**Input:**\n```\n1 2 3 4 5 6\n```\n**Output:**\n```\n[2, 4, 6]\n```\n\n### Constraints\n- $0 \\le \\text{len}(nums) \\le 1000$\n- All elements are integers between $-10^5$ and $10^5$.",
+      "difficulty": "easy",
+      "language": "python",
+      "topics": ["comprehensions", "arrays"],
+      "expected_concepts": ["comprehension"],
+      "constraints": ["Length of input list <= 1000", "Must use list comprehension syntax"],
+      "input_format": "A single line containing space-separated integers.",
+      "output_format": "The standard Python string representation of the filtered list.",
+      "starter_code": "import sys\n\ndef filter_evens():\n    raw = sys.stdin.read().strip()\n    if not raw:\n        print([])\n        return\n    nums = [int(x) for x in raw.split()]\n    # TODO: Filter even numbers using a list comprehension\n    evens = [x for x in nums if x % 2 == 0]\n    print(evens)\n\nif __name__ == '__main__':\n    filter_evens()\n",
+      "reference_solution": "import sys\n\ndef main():\n    raw = sys.stdin.read().strip()\n    if not raw:\n        print([])\n        return\n    nums = [int(x) for x in raw.split()]\n    evens = [x for x in nums if x % 2 == 0]\n    print(evens)\n\nif __name__ == '__main__':\n    main()\n",
+      "test_cases": [
+        {
+          "input_data": "1 2 3 4 5 6\n",
+          "expected_output": "[2, 4, 6]\n",
+          "visibility": "sample",
+          "weight": 1.0
+        },
+        {
+          "input_data": "7 11 13 15\n",
+          "expected_output": "[]\n",
+          "visibility": "public",
+          "weight": 1.0
+        },
+        {
+          "input_data": "10 20 30 40\n",
+          "expected_output": "[10, 20, 30, 40]\n",
+          "visibility": "hidden",
+          "weight": 1.0
+        }
+      ],
+      "concept_rules": [
+        {
+          "concept": "comprehension",
+          "rule_id": "rule_require_list_comprehension",
+          "accepted_constructs": ["ListComp"],
+          "required": true,
+          "min_occurrences": 1,
+          "description": "Must filter numbers using Python list comprehension syntax."
+        }
+      ],
+      "functional_weight": 60.0,
+      "concept_weight": 40.0
+    },
+    {
+      "title": "Word Frequency Counter with Dictionary",
+      "slug": "word-frequency-counter-dict",
+      "statement_markdown": "### Problem Description\n\nGiven a block of text on standard input, convert all words to lowercase, count the frequency of each unique word, and print them in alphabetical order with each word on its own line formatted as `word: count`.\n\n### Concept Requirement\nYou **must** store and aggregate your word counts using a Python **dictionary** (`dict`).\n\n### Example 1\n**Input:**\n```\napple banana apple orange banana apple\n```\n**Output:**\n```\napple: 3\nbanana: 2\norange: 1\n```",
+      "difficulty": "easy",
+      "language": "python",
+      "topics": ["strings", "hashing"],
+      "expected_concepts": ["dictionary"],
+      "constraints": ["Case-insensitive word matching", "Alphabetical output ordering"],
+      "input_format": "Space-separated words.",
+      "output_format": "Alphabetically sorted words and counts: `word: count` per line.",
+      "starter_code": "import sys\n\ndef count_words():\n    text = sys.stdin.read().strip()\n    # TODO: Build frequency count dictionary\n    pass\n\nif __name__ == '__main__':\n    count_words()\n",
+      "reference_solution": "import sys\n\ndef main():\n    text = sys.stdin.read().strip()\n    if not text:\n        return\n    words = text.lower().split()\n    counts = {}\n    for w in words:\n        counts[w] = counts.get(w, 0) + 1\n    for w in sorted(counts.keys()):\n        print(f\"{w}: {counts[w]}\")\n\nif __name__ == '__main__':\n    main()\n",
+      "test_cases": [
+        {
+          "input_data": "apple banana apple orange banana apple\n",
+          "expected_output": "apple: 3\nbanana: 2\norange: 1\n",
+          "visibility": "sample",
+          "weight": 1.0
+        },
+        {
+          "input_data": "hello world HELLO\n",
+          "expected_output": "hello: 2\nworld: 1\n",
+          "visibility": "public",
+          "weight": 1.0
+        }
+      ],
+      "concept_rules": [
+        {
+          "concept": "dictionary",
+          "rule_id": "rule_require_dict",
+          "accepted_constructs": ["Dict", "Subscript"],
+          "required": true,
+          "min_occurrences": 1,
+          "description": "Must accumulate frequencies inside a dictionary data structure."
+        }
+      ],
+      "functional_weight": 60.0,
+      "concept_weight": 40.0
+    },
+    {
+      "title": "Reverse Words via String Slicing",
+      "slug": "reverse-words-slicing",
+      "statement_markdown": "### Problem Description\n\nRead a single string from standard input and print the exact reversed string.\n\n### Concept Requirement\nYou **must** use Python's **slicing notation** (`[::-1]`) to perform the reversal. Looping backwards or using `.reverse()` will not satisfy the concept requirement.\n\n### Example 1\n**Input:**\n```\nalgorithm\n```\n**Output:**\n```\nmhtirogla\n```",
+      "difficulty": "easy",
+      "language": "python",
+      "topics": ["strings"],
+      "expected_concepts": ["slice"],
+      "constraints": ["String length <= 10000", "Must use slice indexing"],
+      "input_format": "A single line containing the input string.",
+      "output_format": "The reversed string followed by a newline.",
+      "starter_code": "import sys\n\ndef reverse_str():\n    s = sys.stdin.read().rstrip('\\r\\n')\n    # TODO: Reverse string using Python slice syntax\n    print(s[::-1])\n\nif __name__ == '__main__':\n    reverse_str()\n",
+      "reference_solution": "import sys\n\ndef main():\n    s = sys.stdin.read().rstrip('\\r\\n')\n    print(s[::-1])\n\nif __name__ == '__main__':\n    main()\n",
+      "test_cases": [
+        {
+          "input_data": "algorithm\n",
+          "expected_output": "mhtirogla\n",
+          "visibility": "sample",
+          "weight": 1.0
+        },
+        {
+          "input_data": "racecar\n",
+          "expected_output": "racecar\n",
+          "visibility": "public",
+          "weight": 1.0
+        }
+      ],
+      "concept_rules": [
+        {
+          "concept": "slice",
+          "rule_id": "rule_require_slice",
+          "accepted_constructs": ["Slice"],
+          "required": true,
+          "min_occurrences": 1,
+          "description": "Must use slicing notation [::-1] for reversal."
+        }
+      ],
+      "functional_weight": 60.0,
+      "concept_weight": 40.0
+    },
+    {
+      "title": "Iterative Binary Search with While Loop",
+      "slug": "iterative-binary-search",
+      "statement_markdown": "### Problem Description\n\nGiven a sorted array of distinct integers on line 1, and a target integer on line 2, find and print the 0-based index of the target in the array. If the target is not present, print `-1`.\n\n### Concept Requirement\nYou **must** implement the search using an iterative **while loop** with two pointers (`left` and `right`). Recursive implementations or built-in `list.index()` calls do not receive concept credit.\n\n### Example 1\n**Input:**\n```\n-5 0 3 9 12 18\n9\n```\n**Output:**\n```\n3\n```",
+      "difficulty": "medium",
+      "language": "python",
+      "topics": ["searching", "arrays", "loops"],
+      "expected_concepts": ["while_loop"],
+      "constraints": ["Array is sorted in strictly ascending order", "O(log N) time complexity required"],
+      "input_format": "Line 1: space-separated sorted integers. Line 2: target integer.",
+      "output_format": "Integer index or -1.",
+      "starter_code": "import sys\n\ndef binary_search():\n    lines = sys.stdin.read().strip().split('\\n')\n    if not lines or not lines[0].strip():\n        print(-1)\n        return\n    nums = [int(x) for x in lines[0].split()]\n    target = int(lines[1].strip())\n    \n    # TODO: Implement while-loop binary search\n    left, right = 0, len(nums) - 1\n    ans = -1\n    while left <= right:\n        mid = (left + right) // 2\n        if nums[mid] == target:\n            ans = mid\n            break\n        elif nums[mid] < target:\n            left = mid + 1\n        else:\n            right = mid - 1\n    print(ans)\n\nif __name__ == '__main__':\n    binary_search()\n",
+      "reference_solution": "import sys\n\ndef main():\n    lines = sys.stdin.read().strip().split('\\n')\n    nums = [int(x) for x in lines[0].split()]\n    target = int(lines[1].strip())\n    left, right = 0, len(nums) - 1\n    ans = -1\n    while left <= right:\n        mid = (left + right) // 2\n        if nums[mid] == target:\n            ans = mid\n            break\n        elif nums[mid] < target:\n            left = mid + 1\n        else:\n            right = mid - 1\n    print(ans)\n\nif __name__ == '__main__':\n    main()\n",
+      "test_cases": [
+        {
+          "input_data": "-5 0 3 9 12 18\n9\n",
+          "expected_output": "3\n",
+          "visibility": "sample",
+          "weight": 1.0
+        },
+        {
+          "input_data": "1 3 5 7 9\n4\n",
+          "expected_output": "-1\n",
+          "visibility": "public",
+          "weight": 1.0
+        }
+      ],
+      "concept_rules": [
+        {
+          "concept": "while_loop",
+          "rule_id": "rule_require_while",
+          "accepted_constructs": ["While"],
+          "required": true,
+          "min_occurrences": 1,
+          "description": "Must use an iterative while loop with boundary pointers."
+        }
+      ],
+      "functional_weight": 60.0,
+      "concept_weight": 40.0
+    },
+    {
+      "title": "Fibonacci Number with Direct Recursion",
+      "slug": "fibonacci-direct-recursion",
+      "statement_markdown": "### Problem Description\n\nGiven a single integer $N$ ($0 \\le N \\le 25$) from standard input, compute and print the $N$-th Fibonacci number, where $F(0) = 0, F(1) = 1$, and $F(N) = F(N-1) + F(N-2)$.\n\n### Concept Requirement\nYou **must** implement this computation via a **recursive function** that directly invokes itself. Iterative loop solutions will not receive concept marks.\n\n### Example 1\n**Input:**\n```\n7\n```\n**Output:**\n```\n13\n```",
+      "difficulty": "easy",
+      "language": "python",
+      "topics": ["recursion", "math"],
+      "expected_concepts": ["recursion"],
+      "constraints": ["0 <= N <= 25", "Must be solved recursively"],
+      "input_format": "Single integer N on standard input.",
+      "output_format": "N-th Fibonacci number.",
+      "starter_code": "import sys\n\ndef fib(n):\n    # TODO: Implement base and recursive cases\n    if n <= 0:\n        return 0\n    if n == 1:\n        return 1\n    return fib(n - 1) + fib(n - 2)\n\nif __name__ == '__main__':\n    n = int(sys.stdin.read().strip())\n    print(fib(n))\n",
+      "reference_solution": "import sys\n\ndef fib(n):\n    if n <= 0:\n        return 0\n    if n == 1:\n        return 1\n    return fib(n - 1) + fib(n - 2)\n\nif __name__ == '__main__':\n    n = int(sys.stdin.read().strip())\n    print(fib(n))\n",
+      "test_cases": [
+        {
+          "input_data": "7\n",
+          "expected_output": "13\n",
+          "visibility": "sample",
+          "weight": 1.0
+        },
+        {
+          "input_data": "0\n",
+          "expected_output": "0\n",
+          "visibility": "public",
+          "weight": 1.0
+        },
+        {
+          "input_data": "10\n",
+          "expected_output": "55\n",
+          "visibility": "hidden",
+          "weight": 1.0
+        }
+      ],
+      "concept_rules": [
+        {
+          "concept": "recursion",
+          "rule_id": "rule_require_recursion",
+          "accepted_constructs": ["recursion"],
+          "required": true,
+          "min_occurrences": 1,
+          "description": "Must compute result using a self-calling recursive function."
+        }
+      ],
+      "functional_weight": 60.0,
+      "concept_weight": 40.0
+    },
+    {
+      "title": "Validate Parentheses Balance Using a Stack",
+      "slug": "validate-parentheses-stack",
+      "statement_markdown": "### Problem Description\n\nGiven a string containing just the characters `(`, `)`, `{`, `}`, `[` and `]` on standard input, determine if the input string is valid.\n\nAn input string is valid if:\n1. Open brackets are closed by the same type of brackets.\n2. Open brackets are closed in the correct order.\n3. Every close bracket has a corresponding open bracket of the same type.\n\nPrint `True` if valid, otherwise print `False`.\n\n### Concept Requirement\nYou **must** use an explicit **stack** structure (using Python `list` with `.append()` and `.pop()`).\n\n### Example 1\n**Input:**\n```\n{[()]}\n```\n**Output:**\n```\nTrue\n```",
+      "difficulty": "medium",
+      "language": "python",
+      "topics": ["stacks", "strings"],
+      "expected_concepts": ["stack"],
+      "constraints": ["String length <= 5000", "Must use stack operations"],
+      "input_format": "A single line containing bracket characters.",
+      "output_format": "True or False.",
+      "starter_code": "import sys\n\ndef is_valid():\n    s = sys.stdin.read().strip()\n    stack = []\n    mapping = {')': '(', '}': '{', ']': '['}\n    # TODO: Validate matching pairs using stack\n    for char in s:\n        if char in mapping:\n            top = stack.pop() if stack else '#'\n            if mapping[char] != top:\n                print(False)\n                return\n        else:\n            stack.append(char)\n    print(len(stack) == 0)\n\nif __name__ == '__main__':\n    is_valid()\n",
+      "reference_solution": "import sys\n\ndef main():\n    s = sys.stdin.read().strip()\n    stack = []\n    mapping = {')': '(', '}': '{', ']': '['}\n    for char in s:\n        if char in mapping:\n            top = stack.pop() if stack else '#'\n            if mapping[char] != top:\n                print(False)\n                return\n        else:\n            stack.append(char)\n    print(len(stack) == 0)\n\nif __name__ == '__main__':\n    main()\n",
+      "test_cases": [
+        {
+          "input_data": "{[()]}\n",
+          "expected_output": "True\n",
+          "visibility": "sample",
+          "weight": 1.0
+        },
+        {
+          "input_data": "([)]\n",
+          "expected_output": "False\n",
+          "visibility": "public",
+          "weight": 1.0
+        }
+      ],
+      "concept_rules": [
+        {
+          "concept": "stack",
+          "rule_id": "rule_require_stack",
+          "accepted_constructs": ["Call"],
+          "required": true,
+          "min_occurrences": 1,
+          "description": "Must manage matching pairs with stack append/pop operations."
+        }
+      ],
+      "functional_weight": 60.0,
+      "concept_weight": 40.0
+    },
+    {
+      "title": "Merge Two Sorted Lists with Two Pointers",
+      "slug": "merge-sorted-lists-two-pointers",
+      "statement_markdown": "### Problem Description\n\nGiven two sorted integer lists on separate lines of standard input, merge them into a single sorted list and print the result.\n\n### Concept Requirement\nYou **must** use a **while loop** with two independent pointers traversing both lists simultaneously. Calling `.sort()` or `sorted()` on combined arrays is prohibited.\n\n### Example 1\n**Input:**\n```\n1 3 5\n2 4 6\n```\n**Output:**\n```\n[1, 2, 3, 4, 5, 6]\n```",
+      "difficulty": "medium",
+      "language": "python",
+      "topics": ["arrays", "loops"],
+      "expected_concepts": ["while_loop"],
+      "constraints": ["Lists are pre-sorted in ascending order", "Linear O(N+M) merge"],
+      "input_format": "Line 1: space-separated integers. Line 2: space-separated integers.",
+      "output_format": "Merged list representation.",
+      "starter_code": "import sys\n\ndef merge_sorted():\n    lines = sys.stdin.read().strip().split('\\n')\n    l1 = [int(x) for x in lines[0].split()] if lines and lines[0].strip() else []\n    l2 = [int(x) for x in lines[1].split()] if len(lines) > 1 and lines[1].strip() else []\n    i, j = 0, 0\n    res = []\n    while i < len(l1) and j < len(l2):\n        if l1[i] <= l2[j]:\n            res.append(l1[i])\n            i += 1\n        else:\n            res.append(l2[j])\n            j += 1\n    res.extend(l1[i:])\n    res.extend(l2[j:])\n    print(res)\n\nif __name__ == '__main__':\n    merge_sorted()\n",
+      "reference_solution": "import sys\n\ndef main():\n    lines = sys.stdin.read().strip().split('\\n')\n    l1 = [int(x) for x in lines[0].split()] if lines and lines[0].strip() else []\n    l2 = [int(x) for x in lines[1].split()] if len(lines) > 1 and lines[1].strip() else []\n    i, j = 0, 0\n    res = []\n    while i < len(l1) and j < len(l2):\n        if l1[i] <= l2[j]:\n            res.append(l1[i])\n            i += 1\n        else:\n            res.append(l2[j])\n            j += 1\n    res.extend(l1[i:])\n    res.extend(l2[j:])\n    print(res)\n\nif __name__ == '__main__':\n    main()\n",
+      "test_cases": [
+        {
+          "input_data": "1 3 5\n2 4 6\n",
+          "expected_output": "[1, 2, 3, 4, 5, 6]\n",
+          "visibility": "sample",
+          "weight": 1.0
+        },
+        {
+          "input_data": "10 20\n5 15 25 35\n",
+          "expected_output": "[5, 10, 15, 20, 25, 35]\n",
+          "visibility": "public",
+          "weight": 1.0
+        }
+      ],
+      "concept_rules": [
+        {
+          "concept": "while_loop",
+          "rule_id": "rule_require_while",
+          "accepted_constructs": ["While"],
+          "required": true,
+          "min_occurrences": 1,
+          "description": "Must merge lists using while loop with index pointers."
+        }
+      ],
+      "functional_weight": 60.0,
+      "concept_weight": 40.0
+    },
+    {
+      "title": "Find Array Duplicates using Hash Set",
+      "slug": "find-duplicates-hashset",
+      "statement_markdown": "### Problem Description\n\nGiven an array of integers on standard input, print `True` if any value appears at least twice in the array, and print `False` if every element is distinct.\n\n### Concept Requirement\nYou **must** use a Python **set** (`set()`) for tracking observed elements in $O(N)$ time.\n\n### Example 1\n**Input:**\n```\n1 2 3 1\n```\n**Output:**\n```\nTrue\n```",
+      "difficulty": "easy",
+      "language": "python",
+      "topics": ["hashing", "arrays"],
+      "expected_concepts": ["set"],
+      "constraints": ["Array length <= 100000", "Must use set data structure"],
+      "input_format": "Space-separated integers.",
+      "output_format": "True or False.",
+      "starter_code": "import sys\n\ndef has_duplicates():\n    nums = [int(x) for x in sys.stdin.read().split()]\n    seen = set()\n    for x in nums:\n        if x in seen:\n            print(True)\n            return\n        seen.add(x)\n    print(False)\n\nif __name__ == '__main__':\n    has_duplicates()\n",
+      "reference_solution": "import sys\n\ndef main():\n    nums = [int(x) for x in sys.stdin.read().split()]\n    seen = set()\n    for x in nums:\n        if x in seen:\n            print(True)\n            return\n        seen.add(x)\n    print(False)\n\nif __name__ == '__main__':\n    main()\n",
+      "test_cases": [
+        {
+          "input_data": "1 2 3 1\n",
+          "expected_output": "True\n",
+          "visibility": "sample",
+          "weight": 1.0
+        },
+        {
+          "input_data": "1 2 3 4\n",
+          "expected_output": "False\n",
+          "visibility": "public",
+          "weight": 1.0
+        }
+      ],
+      "concept_rules": [
+        {
+          "concept": "set",
+          "rule_id": "rule_require_set",
+          "accepted_constructs": ["Call", "Set"],
+          "required": true,
+          "min_occurrences": 1,
+          "description": "Must track seen elements using a set collection."
+        }
+      ],
+      "functional_weight": 60.0,
+      "concept_weight": 40.0
+    },
+    {
+      "title": "Two Sum Target using One-Pass Hash Map",
+      "slug": "two-sum-hash-map",
+      "statement_markdown": "### Problem Description\n\nGiven space-separated integers on line 1, and a target sum integer on line 2, find the two 0-based indices whose elements sum to target. Print the two indices sorted in ascending order as `index1 index2`.\n\n### Concept Requirement\nYou **must** use a Python **dictionary** to store numbers and indices for $O(1)$ complement lookups in a single pass. Quadratic nested loops will fail concept verification.\n\n### Example 1\n**Input:**\n```\n2 7 11 15\n9\n```\n**Output:**\n```\n0 1\n```",
+      "difficulty": "easy",
+      "language": "python",
+      "topics": ["hashing", "arrays"],
+      "expected_concepts": ["dictionary"],
+      "constraints": ["Exactly one valid solution exists", "Cannot use the same element twice"],
+      "input_format": "Line 1: space-separated integers. Line 2: target integer.",
+      "output_format": "Two space-separated indices.",
+      "starter_code": "import sys\n\ndef two_sum():\n    lines = sys.stdin.read().strip().split('\\n')\n    nums = [int(x) for x in lines[0].split()]\n    target = int(lines[1].strip())\n    lookup = {}\n    for i, num in enumerate(nums):\n        comp = target - num\n        if comp in lookup:\n            print(f\"{lookup[comp]} {i}\")\n            return\n        lookup[num] = i\n\nif __name__ == '__main__':\n    two_sum()\n",
+      "reference_solution": "import sys\n\ndef main():\n    lines = sys.stdin.read().strip().split('\\n')\n    nums = [int(x) for x in lines[0].split()]\n    target = int(lines[1].strip())\n    lookup = {}\n    for i, num in enumerate(nums):\n        comp = target - num\n        if comp in lookup:\n            print(f\"{lookup[comp]} {i}\")\n            return\n        lookup[num] = i\n\nif __name__ == '__main__':\n    main()\n",
+      "test_cases": [
+        {
+          "input_data": "2 7 11 15\n9\n",
+          "expected_output": "0 1\n",
+          "visibility": "sample",
+          "weight": 1.0
+        },
+        {
+          "input_data": "3 2 4\n6\n",
+          "expected_output": "1 2\n",
+          "visibility": "public",
+          "weight": 1.0
+        }
+      ],
+      "concept_rules": [
+        {
+          "concept": "dictionary",
+          "rule_id": "rule_require_dict",
+          "accepted_constructs": ["Dict", "Subscript"],
+          "required": true,
+          "min_occurrences": 1,
+          "description": "Must store element-to-index pairs in a hash map dictionary."
+        }
+      ],
+      "functional_weight": 60.0,
+      "concept_weight": 40.0
+    },
+    {
+      "title": "Matrix Transpose via Nested List Comprehension",
+      "slug": "matrix-transpose-comprehension",
+      "statement_markdown": "### Problem Description\n\nGiven a 2D integer matrix represented as JSON on standard input, print its transpose formatted as JSON.\n\n### Concept Requirement\nYou **must** compute the transpose using a **nested list comprehension** (`[[row[i] for row in matrix] for i in range(len(matrix[0]))]`). Traditional nested for-loops are not permitted.\n\n### Example 1\n**Input:**\n```\n[[1, 2, 3], [4, 5, 6]]\n```\n**Output:**\n```\n[[1, 4], [2, 5], [3, 6]]\n```",
+      "difficulty": "medium",
+      "language": "python",
+      "topics": ["comprehensions", "arrays"],
+      "expected_concepts": ["comprehension"],
+      "constraints": ["Matrix dimensions <= 50x50", "Must use nested list comprehension"],
+      "input_format": "JSON-formatted 2D list.",
+      "output_format": "JSON-formatted transposed 2D list.",
+      "starter_code": "import sys, json\n\ndef transpose():\n    matrix = json.loads(sys.stdin.read().strip())\n    if not matrix or not matrix[0]:\n        print([])\n        return\n    # TODO: Transpose using nested list comprehension\n    result = [[matrix[r][c] for r in range(len(matrix))] for c in range(len(matrix[0]))]\n    print(json.dumps(result))\n\nif __name__ == '__main__':\n    transpose()\n",
+      "reference_solution": "import sys, json\n\ndef main():\n    matrix = json.loads(sys.stdin.read().strip())\n    if not matrix or not matrix[0]:\n        print([])\n        return\n    result = [[matrix[r][c] for r in range(len(matrix))] for c in range(len(matrix[0]))]\n    print(json.dumps(result))\n\nif __name__ == '__main__':\n    main()\n",
+      "test_cases": [
+        {
+          "input_data": "[[1, 2, 3], [4, 5, 6]]\n",
+          "expected_output": "[[1, 4], [2, 5], [3, 6]]\n",
+          "visibility": "sample",
+          "weight": 1.0
+        },
+        {
+          "input_data": "[[1, 2], [3, 4]]\n",
+          "expected_output": "[[1, 3], [2, 4]]\n",
+          "visibility": "public",
+          "weight": 1.0
+        }
+      ],
+      "concept_rules": [
+        {
+          "concept": "comprehension",
+          "rule_id": "rule_require_nested_comprehension",
+          "accepted_constructs": ["ListComp"],
+          "required": true,
+          "min_occurrences": 1,
+          "description": "Must compute transposed matrix with nested list comprehension."
+        }
+      ],
+      "functional_weight": 60.0,
+      "concept_weight": 40.0
+    },
+    {
+      "title": "Higher-Order Function with Named Helper",
+      "slug": "higher-order-function-transform",
+      "statement_markdown": "### Problem Description\n\nRead a list of integers from standard input. Apply a custom transformation function `square_plus_one(x)` that returns $x^2 + 1$ to each element and print the resulting list.\n\n### Concept Requirement\nYou **must** define a dedicated helper function (`def square_plus_one(x):`) and invoke it for transformation. Performing inline math without helper function definitions is prohibited.\n\n### Example 1\n**Input:**\n```\n1 2 3 4\n```\n**Output:**\n```\n[2, 5, 10, 17]\n```",
+      "difficulty": "easy",
+      "language": "python",
+      "topics": ["functions", "arrays"],
+      "expected_concepts": ["function_definition"],
+      "constraints": ["List size <= 500", "Must define named helper function"],
+      "input_format": "Space-separated integers.",
+      "output_format": "List string representation.",
+      "starter_code": "import sys\n\n# TODO: Define square_plus_one helper function\n\ndef main():\n    raw = sys.stdin.read().strip()\n    if not raw:\n        print([])\n        return\n    nums = [int(x) for x in raw.split()]\n    res = [square_plus_one(x) for x in nums]\n    print(res)\n\nif __name__ == '__main__':\n    main()\n",
+      "reference_solution": "import sys\n\ndef square_plus_one(x):\n    return x * x + 1\n\ndef main():\n    raw = sys.stdin.read().strip()\n    if not raw:\n        print([])\n        return\n    nums = [int(x) for x in raw.split()]\n    res = [square_plus_one(x) for x in nums]\n    print(res)\n\nif __name__ == '__main__':\n    main()\n",
+      "test_cases": [
+        {
+          "input_data": "1 2 3 4\n",
+          "expected_output": "[2, 5, 10, 17]\n",
+          "visibility": "sample",
+          "weight": 1.0
+        },
+        {
+          "input_data": "0 5 10\n",
+          "expected_output": "[1, 26, 101]\n",
+          "visibility": "public",
+          "weight": 1.0
+        },
+        {
+          "input_data": "-2 -1 3\n",
+          "expected_output": "[5, 2, 10]\n",
+          "visibility": "hidden",
+          "weight": 1.0
+        }
+      ],
+      "concept_rules": [
+        {
+          "concept": "function_definition",
+          "rule_id": "rule_require_function_def",
+          "accepted_constructs": ["FunctionDef"],
+          "required": true,
+          "min_occurrences": 2,
+          "description": "Must define at least 2 functions (the helper function and main)."
+        }
+      ],
+      "functional_weight": 60.0,
+      "concept_weight": 40.0
+    },
+    {
+      "title": "Custom Insertion Sort for Tuples",
+      "slug": "custom-insertion-sort-tuples",
+      "statement_markdown": "### Problem Description\n\nGiven space-separated integers on standard input, sort the numbers in ascending order using insertion sort and print the sorted list.\n\n### Concept Requirement\nYou **must** implement this algorithm using **nested loops** (`for` or `while`). Built-in sorting functions (`.sort()`, `sorted()`) are strictly prohibited.\n\n### Example 1\n**Input:**\n```\n5 2 9 1 5 6\n```\n**Output:**\n```\n[1, 2, 5, 5, 6, 9]\n```",
+      "difficulty": "medium",
+      "language": "python",
+      "topics": ["sorting", "arrays", "loops"],
+      "expected_concepts": ["nested_loop"],
+      "constraints": ["Array size <= 1000", "Must use nested loop insertion sort"],
+      "input_format": "Space-separated integers.",
+      "output_format": "Sorted list string representation.",
+      "starter_code": "import sys\n\ndef insertion_sort():\n    raw = sys.stdin.read().strip()\n    if not raw:\n        print([])\n        return\n    nums = [int(x) for x in raw.split()]\n    # TODO: Implement insertion sort using nested loops\n    for i in range(1, len(nums)):\n        key = nums[i]\n        j = i - 1\n        while j >= 0 and nums[j] > key:\n            nums[j + 1] = nums[j]\n            j -= 1\n        nums[j + 1] = key\n    print(nums)\n\nif __name__ == '__main__':\n    insertion_sort()\n",
+      "reference_solution": "import sys\n\ndef main():\n    raw = sys.stdin.read().strip()\n    if not raw:\n        print([])\n        return\n    nums = [int(x) for x in raw.split()]\n    for i in range(1, len(nums)):\n        key = nums[i]\n        j = i - 1\n        while j >= 0 and nums[j] > key:\n            nums[j + 1] = nums[j]\n            j -= 1\n        nums[j + 1] = key\n    print(nums)\n\nif __name__ == '__main__':\n    main()\n",
+      "test_cases": [
+        {
+          "input_data": "5 2 9 1 5 6\n",
+          "expected_output": "[1, 2, 5, 5, 6, 9]\n",
+          "visibility": "sample",
+          "weight": 1.0
+        },
+        {
+          "input_data": "3 1 2\n",
+          "expected_output": "[1, 2, 3]\n",
+          "visibility": "public",
+          "weight": 1.0
+        },
+        {
+          "input_data": "100 -50 0 25\n",
+          "expected_output": "[-50, 0, 25, 100]\n",
+          "visibility": "hidden",
+          "weight": 1.0
+        }
+      ],
+      "concept_rules": [
+        {
+          "concept": "nested_loop",
+          "rule_id": "rule_require_nested_loop",
+          "accepted_constructs": ["For", "While"],
+          "required": true,
+          "min_occurrences": 1,
+          "description": "Must use nested loop construct to perform comparison-based sorting."
+        }
+      ],
+      "functional_weight": 60.0,
+      "concept_weight": 40.0
+    },
+    {
+      "title": "First Unique Character in Stream",
+      "slug": "first-unique-char-queue",
+      "statement_markdown": "### Problem Description\n\nGiven a lowercase string on standard input, find the first non-repeating character and print its 0-based index. If every character repeats, print `-1`.\n\n### Concept Requirement\nYou **must** use a Python **loop** to scan characters and check frequencies with $O(1)$ lookups.\n\n### Example 1\n**Input:**\n```\nleetcode\n```\n**Output:**\n```\n0\n```",
+      "difficulty": "easy",
+      "language": "python",
+      "topics": ["queues", "strings", "hashing"],
+      "expected_concepts": ["loop"],
+      "constraints": ["Length of string <= 50000", "Lowercase English letters only"],
+      "input_format": "Single string on standard input.",
+      "output_format": "Index of first unique character or -1.",
+      "starter_code": "import sys\n\ndef first_unique():\n    s = sys.stdin.read().strip()\n    if not s:\n        print(-1)\n        return\n    # TODO: Identify first non-repeating character using loop and counts\n    counts = {}\n    for ch in s:\n        counts[ch] = counts.get(ch, 0) + 1\n    for idx, ch in enumerate(s):\n        if counts[ch] == 1:\n            print(idx)\n            return\n    print(-1)\n\nif __name__ == '__main__':\n    first_unique()\n",
+      "reference_solution": "import sys\n\ndef main():\n    s = sys.stdin.read().strip()\n    if not s:\n        print(-1)\n        return\n    counts = {}\n    for ch in s:\n        counts[ch] = counts.get(ch, 0) + 1\n    for idx, ch in enumerate(s):\n        if counts[ch] == 1:\n            print(idx)\n            return\n    print(-1)\n\nif __name__ == '__main__':\n    main()\n",
+      "test_cases": [
+        {
+          "input_data": "leetcode\n",
+          "expected_output": "0\n",
+          "visibility": "sample",
+          "weight": 1.0
+        },
+        {
+          "input_data": "loveleetcode\n",
+          "expected_output": "2\n",
+          "visibility": "public",
+          "weight": 1.0
+        },
+        {
+          "input_data": "aabbcc\n",
+          "expected_output": "-1\n",
+          "visibility": "hidden",
+          "weight": 1.0
+        }
+      ],
+      "concept_rules": [
+        {
+          "concept": "loop",
+          "rule_id": "rule_require_stream_loop",
+          "accepted_constructs": ["For", "While"],
+          "required": true,
+          "min_occurrences": 1,
+          "description": "Must scan characters using an explicit loop."
+        }
+      ],
+      "functional_weight": 60.0,
+      "concept_weight": 40.0
+    },
+    {
+      "title": "Singly Linked List Length Calculation",
+      "slug": "singly-linked-list-length",
+      "statement_markdown": "### Problem Description\n\nGiven space-separated integers on standard input, construct a singly linked list representing the numbers in order. Calculate and print the count of nodes in the list.\n\n### Concept Requirement\nYou **must** define an explicit `class ListNode:` or `class Node:` data structure representing the linked list nodes. Array length shortcuts without constructing node objects will not be awarded concept points.\n\n### Example 1\n**Input:**\n```\n10 20 30 40 50\n```\n**Output:**\n```\n5\n```",
+      "difficulty": "medium",
+      "language": "python",
+      "topics": ["linked-lists", "oop"],
+      "expected_concepts": ["oop_class"],
+      "constraints": ["Number of nodes <= 1000", "Must define Node class"],
+      "input_format": "Space-separated integers.",
+      "output_format": "Integer count of nodes.",
+      "starter_code": "import sys\n\n# TODO: Define ListNode class\nclass ListNode:\n    def __init__(self, val=0, next=None):\n        self.val = val\n        self.next = next\n\ndef count_list_length():\n    raw = sys.stdin.read().strip()\n    if not raw:\n        print(0)\n        return\n    nums = [int(x) for x in raw.split()]\n    head = ListNode(nums[0])\n    curr = head\n    for val in nums[1:]:\n        curr.next = ListNode(val)\n        curr = curr.next\n    \n    # Count nodes traversing pointers\n    count = 0\n    curr = head\n    while curr:\n        count += 1\n        curr = curr.next\n    print(count)\n\nif __name__ == '__main__':\n    count_list_length()\n",
+      "reference_solution": "import sys\n\nclass ListNode:\n    def __init__(self, val=0, next=None):\n        self.val = val\n        self.next = next\n\ndef main():\n    raw = sys.stdin.read().strip()\n    if not raw:\n        print(0)\n        return\n    nums = [int(x) for x in raw.split()]\n    head = ListNode(nums[0])\n    curr = head\n    for val in nums[1:]:\n        curr.next = ListNode(val)\n        curr = curr.next\n    count = 0\n    curr = head\n    while curr:\n        count += 1\n        curr = curr.next\n    print(count)\n\nif __name__ == '__main__':\n    main()\n",
+      "test_cases": [
+        {
+          "input_data": "10 20 30 40 50\n",
+          "expected_output": "5\n",
+          "visibility": "sample",
+          "weight": 1.0
+        },
+        {
+          "input_data": "42\n",
+          "expected_output": "1\n",
+          "visibility": "public",
+          "weight": 1.0
+        },
+        {
+          "input_data": "\n",
+          "expected_output": "0\n",
+          "visibility": "hidden",
+          "weight": 1.0
+        }
+      ],
+      "concept_rules": [
+        {
+          "concept": "oop_class",
+          "rule_id": "rule_require_node_class",
+          "accepted_constructs": ["ClassDef"],
+          "required": true,
+          "min_occurrences": 1,
+          "description": "Must define an object-oriented ListNode class."
+        }
+      ],
+      "functional_weight": 60.0,
+      "concept_weight": 40.0
+    },
+    {
+      "title": "Climbing Stairs with Dynamic Programming",
+      "slug": "climbing-stairs-dp",
+      "statement_markdown": "### Problem Description\n\nYou are climbing a staircase that has $N$ steps. Each time you can climb either 1 or 2 steps. In how many distinct ways can you climb to the top? Given integer $N$ on standard input, print the number of ways.\n\n### Concept Requirement\nYou **must** compute the answer using a **loop** implementing iterative dynamic programming (bottom-up table or two rolling variables). Exponential naive recursion will timeout and violate concept rules.\n\n### Example 1\n**Input:**\n```\n5\n```\n**Output:**\n```\n8\n```",
+      "difficulty": "easy",
+      "language": "python",
+      "topics": ["dynamic-programming", "arrays", "loops"],
+      "expected_concepts": ["loop"],
+      "constraints": ["1 <= N <= 45", "O(N) time complexity required"],
+      "input_format": "Single integer N on standard input.",
+      "output_format": "Number of distinct ways.",
+      "starter_code": "import sys\n\ndef climb_stairs():\n    n = int(sys.stdin.read().strip())\n    if n <= 2:\n        print(n)\n        return\n    # TODO: Implement dynamic programming loop\n    a, b = 1, 2\n    for _ in range(3, n + 1):\n        a, b = b, a + b\n    print(b)\n\nif __name__ == '__main__':\n    climb_stairs()\n",
+      "reference_solution": "import sys\n\ndef main():\n    n = int(sys.stdin.read().strip())\n    if n <= 2:\n        print(n)\n        return\n    a, b = 1, 2\n    for _ in range(3, n + 1):\n        a, b = b, a + b\n    print(b)\n\nif __name__ == '__main__':\n    main()\n",
+      "test_cases": [
+        {
+          "input_data": "5\n",
+          "expected_output": "8\n",
+          "visibility": "sample",
+          "weight": 1.0
+        },
+        {
+          "input_data": "2\n",
+          "expected_output": "2\n",
+          "visibility": "public",
+          "weight": 1.0
+        },
+        {
+          "input_data": "10\n",
+          "expected_output": "89\n",
+          "visibility": "hidden",
+          "weight": 1.0
+        }
+      ],
+      "concept_rules": [
+        {
+          "concept": "loop",
+          "rule_id": "rule_require_dp_loop",
+          "accepted_constructs": ["For", "While"],
+          "required": true,
+          "min_occurrences": 1,
+          "description": "Must use an iterative loop to accumulate DP subproblems in linear time."
+        }
+      ],
+      "functional_weight": 60.0,
+      "concept_weight": 40.0
+    },
+    {
+      "title": "Binary Tree Maximum Depth via Recursion",
+      "slug": "binary-tree-max-depth",
+      "statement_markdown": "### Problem Description\n\nGiven the node values of a binary tree in level-order traversal as a JSON list (where `None` represents null leaves), find and print its maximum depth.\n\n### Concept Requirement\nYou **must** compute the depth using a **recursive function** (`recursion`).\n\n### Example 1\n**Input:**\n```\n[3, 9, 20, null, null, 15, 7]\n```\n**Output:**\n```\n3\n```",
+      "difficulty": "medium",
+      "language": "python",
+      "topics": ["trees", "recursion", "oop"],
+      "expected_concepts": ["recursion"],
+      "constraints": ["Number of nodes <= 2000", "Must use recursive tree traversal"],
+      "input_format": "JSON array representing level-order binary tree.",
+      "output_format": "Integer max depth.",
+      "starter_code": "import sys, json\n\nclass TreeNode:\n    def __init__(self, val=0, left=None, right=None):\n        self.val = val\n        self.left = left\n        self.right = right\n\ndef max_depth(root):\n    # TODO: Implement recursive depth calculation\n    if not root:\n        return 0\n    return 1 + max(max_depth(root.left), max_depth(root.right))\n\ndef build_tree(vals):\n    if not vals or vals[0] is None:\n        return None\n    root = TreeNode(vals[0])\n    queue = [root]\n    i = 1\n    while queue and i < len(vals):\n        curr = queue.pop(0)\n        if i < len(vals) and vals[i] is not None:\n            curr.left = TreeNode(vals[i])\n            queue.append(curr.left)\n        i += 1\n        if i < len(vals) and vals[i] is not None:\n            curr.right = TreeNode(vals[i])\n            queue.append(curr.right)\n        i += 1\n    return root\n\nif __name__ == '__main__':\n    raw = sys.stdin.read().strip()\n    vals = json.loads(raw) if raw else []\n    root = build_tree(vals)\n    print(max_depth(root))\n",
+      "reference_solution": "import sys, json\n\nclass TreeNode:\n    def __init__(self, val=0, left=None, right=None):\n        self.val = val\n        self.left = left\n        self.right = right\n\ndef max_depth(root):\n    if not root:\n        return 0\n    return 1 + max(max_depth(root.left), max_depth(root.right))\n\ndef build_tree(vals):\n    if not vals or vals[0] is None:\n        return None\n    root = TreeNode(vals[0])\n    queue = [root]\n    i = 1\n    while queue and i < len(vals):\n        curr = queue.pop(0)\n        if i < len(vals) and vals[i] is not None:\n            curr.left = TreeNode(vals[i])\n            queue.append(curr.left)\n        i += 1\n        if i < len(vals) and vals[i] is not None:\n            curr.right = TreeNode(vals[i])\n            queue.append(curr.right)\n        i += 1\n    return root\n\nif __name__ == '__main__':\n    raw = sys.stdin.read().strip()\n    vals = json.loads(raw) if raw else []\n    root = build_tree(vals)\n    print(max_depth(root))\n",
+      "test_cases": [
+        {
+          "input_data": "[3, 9, 20, null, null, 15, 7]\n",
+          "expected_output": "3\n",
+          "visibility": "sample",
+          "weight": 1.0
+        },
+        {
+          "input_data": "[1, null, 2]\n",
+          "expected_output": "2\n",
+          "visibility": "public",
+          "weight": 1.0
+        },
+        {
+          "input_data": "[]\n",
+          "expected_output": "0\n",
+          "visibility": "hidden",
+          "weight": 1.0
+        }
+      ],
+      "concept_rules": [
+        {
+          "concept": "recursion",
+          "rule_id": "rule_require_tree_recursion",
+          "accepted_constructs": ["recursion"],
+          "required": true,
+          "min_occurrences": 1,
+          "description": "Must compute tree depth using recursive depth-first traversal."
+        }
+      ],
+      "functional_weight": 60.0,
+      "concept_weight": 40.0
+    }
+  ]
+}

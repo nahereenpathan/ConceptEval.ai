@@ -391,3 +391,188 @@ class ProhibitedConstructVisitor(BaseConceptVisitor):
                 "snippet": self.get_snippet(node),
             })
         self.generic_visit(node)
+
+
+class SliceVisitor(BaseConceptVisitor):
+    """Detects slicing constructs (e.g. s[::-1], s[1:5], arr[:], slice())."""
+
+    def visit_Subscript(self, node: ast.Subscript):
+        if isinstance(node.slice, ast.Slice):
+            self.matches.append({
+                "construct": "slice",
+                "line": node.lineno,
+                "col": node.col_offset,
+                "end_line": getattr(node, "end_lineno", node.lineno),
+                "end_col": getattr(node, "end_col_offset", node.col_offset),
+                "node_type": "SubscriptSlice",
+                "snippet": self.get_snippet(node),
+            })
+        self.generic_visit(node)
+
+    def visit_Slice(self, node: ast.Slice):
+        # Ensure Slice node itself is recorded if visited directly
+        if hasattr(node, "lineno"):
+            self.matches.append({
+                "construct": "slice",
+                "line": node.lineno,
+                "col": node.col_offset,
+                "end_line": getattr(node, "end_lineno", node.lineno),
+                "end_col": getattr(node, "end_col_offset", node.col_offset),
+                "node_type": "Slice",
+                "snippet": self.get_snippet(node),
+            })
+        self.generic_visit(node)
+
+    def visit_Call(self, node: ast.Call):
+        if isinstance(node.func, ast.Name) and node.func.id == "slice":
+            self.matches.append({
+                "construct": "slice",
+                "line": node.lineno,
+                "col": node.col_offset,
+                "end_line": getattr(node, "end_lineno", node.lineno),
+                "end_col": getattr(node, "end_col_offset", node.col_offset),
+                "node_type": "SliceCall",
+                "snippet": self.get_snippet(node),
+            })
+        self.generic_visit(node)
+
+
+class DictionaryVisitor(BaseConceptVisitor):
+    """Detects dictionary literals, dict() calls, defaultdict, Counter, and subscript key accesses."""
+
+    def visit_Dict(self, node: ast.Dict):
+        self.matches.append({
+            "construct": "dict",
+            "line": node.lineno,
+            "col": node.col_offset,
+            "end_line": getattr(node, "end_lineno", node.lineno),
+            "end_col": getattr(node, "end_col_offset", node.col_offset),
+            "node_type": "Dict",
+            "snippet": self.get_snippet(node),
+        })
+        self.generic_visit(node)
+
+    def visit_DictComp(self, node: ast.DictComp):
+        self.matches.append({
+            "construct": "dict",
+            "line": node.lineno,
+            "col": node.col_offset,
+            "end_line": getattr(node, "end_lineno", node.lineno),
+            "end_col": getattr(node, "end_col_offset", node.col_offset),
+            "node_type": "DictComp",
+            "snippet": self.get_snippet(node),
+        })
+        self.generic_visit(node)
+
+    def visit_Call(self, node: ast.Call):
+        name = None
+        if isinstance(node.func, ast.Name):
+            name = node.func.id
+        elif isinstance(node.func, ast.Attribute):
+            name = node.func.attr
+
+        if name in ("dict", "defaultdict", "Counter", "fromkeys"):
+            self.matches.append({
+                "construct": "dict",
+                "line": node.lineno,
+                "col": node.col_offset,
+                "end_line": getattr(node, "end_lineno", node.lineno),
+                "end_col": getattr(node, "end_col_offset", node.col_offset),
+                "node_type": "DictCall",
+                "snippet": self.get_snippet(node),
+            })
+        self.generic_visit(node)
+
+    def visit_Subscript(self, node: ast.Subscript):
+        if not isinstance(node.slice, ast.Slice):
+            self.matches.append({
+                "construct": "subscript",
+                "line": node.lineno,
+                "col": node.col_offset,
+                "end_line": getattr(node, "end_lineno", node.lineno),
+                "end_col": getattr(node, "end_col_offset", node.col_offset),
+                "node_type": "Subscript",
+                "snippet": self.get_snippet(node),
+            })
+        self.generic_visit(node)
+
+
+class SetVisitor(BaseConceptVisitor):
+    """Detects set literals, set() constructor, and set operations."""
+
+    def visit_Set(self, node: ast.Set):
+        self.matches.append({
+            "construct": "set",
+            "line": node.lineno,
+            "col": node.col_offset,
+            "end_line": getattr(node, "end_lineno", node.lineno),
+            "end_col": getattr(node, "end_col_offset", node.col_offset),
+            "node_type": "Set",
+            "snippet": self.get_snippet(node),
+        })
+        self.generic_visit(node)
+
+    def visit_SetComp(self, node: ast.SetComp):
+        self.matches.append({
+            "construct": "set",
+            "line": node.lineno,
+            "col": node.col_offset,
+            "end_line": getattr(node, "end_lineno", node.lineno),
+            "end_col": getattr(node, "end_col_offset", node.col_offset),
+            "node_type": "SetComp",
+            "snippet": self.get_snippet(node),
+        })
+        self.generic_visit(node)
+
+    def visit_Call(self, node: ast.Call):
+        name = None
+        if isinstance(node.func, ast.Name):
+            name = node.func.id
+        elif isinstance(node.func, ast.Attribute):
+            name = node.func.attr
+
+        if name in ("set", "frozenset"):
+            self.matches.append({
+                "construct": "call",
+                "line": node.lineno,
+                "col": node.col_offset,
+                "end_line": getattr(node, "end_lineno", node.lineno),
+                "end_col": getattr(node, "end_col_offset", node.col_offset),
+                "node_type": "SetCall",
+                "snippet": self.get_snippet(node),
+            })
+        elif name in ("add", "discard", "intersection", "union", "difference") and isinstance(node.func, ast.Attribute):
+            self.matches.append({
+                "construct": "call",
+                "line": node.lineno,
+                "col": node.col_offset,
+                "end_line": getattr(node, "end_lineno", node.lineno),
+                "end_col": getattr(node, "end_col_offset", node.col_offset),
+                "node_type": "SetMethodCall",
+                "snippet": self.get_snippet(node),
+            })
+        self.generic_visit(node)
+
+
+class StackVisitor(BaseConceptVisitor):
+    """Detects stack data structure operations: append/pop, deque, LifoQueue."""
+
+    def visit_Call(self, node: ast.Call):
+        name = None
+        if isinstance(node.func, ast.Name):
+            name = node.func.id
+        elif isinstance(node.func, ast.Attribute):
+            name = node.func.attr
+
+        if name in ("append", "pop", "push", "popleft", "appendleft", "deque", "LifoQueue"):
+            self.matches.append({
+                "construct": "call",
+                "method_name": name,
+                "line": node.lineno,
+                "col": node.col_offset,
+                "end_line": getattr(node, "end_lineno", node.lineno),
+                "end_col": getattr(node, "end_col_offset", node.col_offset),
+                "node_type": "StackOpCall",
+                "snippet": self.get_snippet(node),
+            })
+        self.generic_visit(node)

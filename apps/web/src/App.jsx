@@ -7,6 +7,8 @@ import ProblemWorkspace from './features/workspace/ProblemWorkspace';
 import AuthoringPlayground from './features/authoring/AuthoringPlayground';
 import { api } from './api/client';
 
+import ErrorBoundary from './components/ErrorBoundary';
+
 export default function App() {
   const [currentUser, setCurrentUser] = useState(null);
   const [authModalOpen, setAuthModalOpen] = useState(false);
@@ -41,19 +43,29 @@ export default function App() {
         />
 
         <main style={{ flex: 1 }}>
-          <Routes>
-            <Route path="/" element={<ProblemList />} />
-            <Route
-              path="/problems/:id"
-              element={
-                <ProblemWorkspace
-                  currentUser={currentUser}
-                  onOpenAuth={() => setAuthModalOpen(true)}
-                />
-              }
-            />
-            <Route path="/authoring" element={<AuthoringPlayground />} />
-          </Routes>
+          <ErrorBoundary>
+            <Routes>
+              <Route path="/" element={<ProblemList />} />
+              <Route
+                path="/problems/:id"
+                element={
+                  <ProblemWorkspace
+                    currentUser={currentUser}
+                    onOpenAuth={() => setAuthModalOpen(true)}
+                  />
+                }
+              />
+              <Route
+                path="/authoring"
+                element={
+                  <AuthoringPlayground
+                    currentUser={currentUser}
+                    onOpenAuth={() => setAuthModalOpen(true)}
+                  />
+                }
+              />
+            </Routes>
+          </ErrorBoundary>
         </main>
 
         <AuthModal

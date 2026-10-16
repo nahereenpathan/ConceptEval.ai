@@ -19,6 +19,12 @@ class ConceptType(str, Enum):
     PROHIBITED_CONSTRUCT = "prohibited_construct"
     SPECIFIC_BUILTIN = "specific_builtin"
     NESTED_LOOP = "nested_loop"
+    WHILE_LOOP = "while_loop"
+    SLICING = "slicing"
+    SLICE = "slice"
+    DICTIONARY = "dictionary"
+    SET = "set"
+    STACK = "stack"
 
 
 class RequiredConcept(BaseModel):
@@ -40,6 +46,25 @@ class RequiredConcept(BaseModel):
         default="",
         description="Human-readable requirement explanation"
     )
+
+    @field_validator("concept", mode="before")
+    @classmethod
+    def normalize_concept_type(cls, v: Any) -> Any:
+        if isinstance(v, str):
+            v_clean = v.strip().lower()
+            alias_map = {
+                "dict": ConceptType.DICTIONARY,
+                "hash_map": ConceptType.DICTIONARY,
+                "hashmap": ConceptType.DICTIONARY,
+                "hash_set": ConceptType.SET,
+                "hashset": ConceptType.SET,
+                "slice": ConceptType.SLICING,
+                "slicing": ConceptType.SLICING,
+                "while": ConceptType.WHILE_LOOP,
+            }
+            if v_clean in alias_map:
+                return alias_map[v_clean]
+        return v
 
 
 class ProhibitedConstruct(BaseModel):

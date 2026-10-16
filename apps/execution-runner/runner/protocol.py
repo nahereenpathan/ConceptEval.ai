@@ -11,6 +11,7 @@ class ExecutionJob(BaseModel):
     """Execution request submitted to the sandbox worker."""
     job_id: str
     source_code: str
+    language: str = "python"  # "python", "java", "cpp", "c++"
     stdin_input: str = ""
     timeout_seconds: float = Field(default=3.0, ge=0.1, le=15.0)
     memory_limit_mb: int = Field(default=128, ge=16, le=512)
@@ -26,5 +27,9 @@ class ExecutionResult(BaseModel):
     duration_ms: float
     timed_out: bool = False
     memory_exceeded: bool = False
-    error_type: Optional[str] = None  # "TIMEOUT", "MEMORY_LIMIT", "NON_ZERO_EXIT", "SYSTEM_ERROR"
+    compilation_error: bool = False
+    compile_output: Optional[str] = None
+    error_type: Optional[str] = None  # "TIMEOUT", "MEMORY_LIMIT", "NON_ZERO_EXIT", "COMPILATION_ERROR", "SYSTEM_ERROR", "SANDBOX_UNAVAILABLE", "SECURITY_VIOLATION"
     truncated: bool = False
+    is_sandboxed: bool = False
+    isolation_mechanism: str = "host_subprocess_uncontained"

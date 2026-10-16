@@ -5,6 +5,7 @@ and dual-track submission evaluation over HTTP endpoints.
 """
 
 import json
+from unittest.mock import patch
 import pytest
 import pytest_asyncio
 from httpx import ASGITransport, AsyncClient
@@ -171,54 +172,55 @@ async def test_full_student_journey_dual_track_evaluation(async_client, test_db_
     assert len(prob_data["sample_test_cases"]) == 1
     assert prob_data["sample_test_cases"][0]["id"] == sample_tc.id
 
-    # 5. Submit COMPLIANT solution (using a loop) -> Full Score (100)
+    # 5. Submit COMPLIANT solution -> Returns 202 Queued and dispatches Celery task
     compliant_code = """
 for i in range(4):
     print("Hello World")
 """
-    sub_res = await async_client.post(
-        "/api/v1/submissions",
-        headers=auth_headers,
-        json={
-            "problem_id": problem.id,
-            "problem_version_number": 1,
-            "language": "python",
-            "source_code": compliant_code,
-        },
-    )
-    assert sub_res.status_code == 201
-    result_compliant = sub_res.json()
-    assert result_compliant["status"] == "completed"
-    assert result_compliant["total_score"] == 100.0
-    assert "Accepted: Full score awarded" in result_compliant["summary_feedback"]
+    with patch("app.api.v1.endpoints.submissions.evaluate_submission_task.delay") as mock_delay:
+        sub_res = await async_client.post(
+            "/api/v1/submissions",
+            headers=auth_headers,
+            json={
+                "problem_id": problem.id,
+                "problem_version_number": 1,
+                "language": "python",
+                "source_code": compliant_code,
+            },
+        )
+        assert sub_res.status_code == 202
+        result_compliant = sub_res.json()
+        assert result_compliant["status"] == "queued"
+        mock_delay.assert_called_once_with(result_compliant["id"])
 
-    # 6. Submit NON-COMPLIANT solution (repeated print, no loop) -> Concept Score Withheld (50)
+    # 6. Submit NON-COMPLIANT solution -> Returns 202 Queued
     repeated_print_code = """
 print("Hello World")
 print("Hello World")
 print("Hello World")
 print("Hello World")
 """
-    sub_res_noncomp = await async_client.post(
-        "/api/v1/submissions",
-        headers=auth_headers,
-        json={
-            "problem_id": problem.id,
-            "problem_version_number": 1,
-            "language": "python",
-            "source_code": repeated_print_code,
-        },
-    )
-    assert sub_res_noncomp.status_code == 201
-    result_noncomp = sub_res_noncomp.json()
-    assert result_noncomp["status"] == "completed"
-    assert result_noncomp["total_score"] == 50.0  # 40 functional + 10 constraints, 0 concept & algo
-    assert any("Requirement violated" in s for s in result_noncomp["actionable_suggestions"])
+    with patch("app.api.v1.endpoints.submissions.evaluate_submission_task.delay") as mock_delay:
+        sub_res_noncomp = await async_client.post(
+            "/api/v1/submissions",
+            headers=auth_headers,
+            json={
+                "problem_id": problem.id,
+                "problem_version_number": 1,
+                "language": "python",
+                "source_code": repeated_print_code,
+            },
+        )
+        assert sub_res_noncomp.status_code == 202
+        result_noncomp = sub_res_noncomp.json()
+        assert result_noncomp["status"] == "queued"
+        mock_delay.assert_called_once_with(result_noncomp["id"])
 
-    # 7. Verify submission retrieval endpoint
+    # 7. Verify submission retrieval endpoint returns queued state
     get_sub = await async_client.get(
         f"/api/v1/submissions/{result_noncomp['id']}",
         headers=auth_headers,
     )
     assert get_sub.status_code == 200
     assert get_sub.json()["id"] == result_noncomp["id"]
+    assert get_sub.json()["status"] == "queued"

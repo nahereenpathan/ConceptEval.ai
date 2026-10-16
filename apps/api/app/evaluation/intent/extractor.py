@@ -84,6 +84,42 @@ class NLPIntentExtractor:
             ["class_def"],
             "Requires object-oriented class definition.",
         ),
+        (
+            ConceptType.WHILE_LOOP,
+            r"\b(while loop|using (a )?while)\b",
+            ["while"],
+            "Requires iterative execution using a while loop.",
+        ),
+        (
+            ConceptType.NESTED_LOOP,
+            r"\b(nested loop(s)?|two nested|matrix traversal)\b",
+            ["nested_loop"],
+            "Requires nested loop constructs for multi-dimensional or multi-pass iteration.",
+        ),
+        (
+            ConceptType.SLICING,
+            r"\b(slic(ing|e)|\[.*:.*\])\b",
+            ["slice"],
+            "Requires sequence slicing syntax.",
+        ),
+        (
+            ConceptType.DICTIONARY,
+            r"\b(dict(ionary)?|hash[- ]?map|hash table|key[- ]value)\b",
+            ["dict", "subscript"],
+            "Requires dictionary / hash map key-value data structure.",
+        ),
+        (
+            ConceptType.SET,
+            r"\b(hash[- ]?set|unique set|set collection|set data structure)\b",
+            ["call", "set"],
+            "Requires set data structure for uniqueness or member tracking.",
+        ),
+        (
+            ConceptType.STACK,
+            r"\b(stack|lifo|push and pop|monotonic stack)\b",
+            ["call"],
+            "Requires stack data structure with append/pop operations.",
+        ),
     ]
 
     # Prohibited constructs patterns

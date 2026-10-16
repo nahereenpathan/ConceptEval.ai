@@ -5,7 +5,7 @@ Durable persistence for code submissions, AST concept evidence, sandbox outputs,
 
 from datetime import datetime
 from typing import Optional
-from sqlalchemy import DateTime, Float, ForeignKey, Integer, String, Text
+from sqlalchemy import DateTime, Float, ForeignKey, Index, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base, TimestampMixin, UUIDPrimaryKeyMixin
@@ -16,7 +16,7 @@ class Submission(Base, UUIDPrimaryKeyMixin, TimestampMixin):
     __tablename__ = "submissions"
 
     user_id: Mapped[str] = mapped_column(String(36), ForeignKey("users.id"), index=True, nullable=False)
-    organization_id: Mapped[Optional[str]] = mapped_column(String(36), index=True, nullable=True)
+    organization_id: Mapped[Optional[str]] = mapped_column(String(36), ForeignKey("organizations.id", ondelete="SET NULL"), index=True, nullable=True)
     problem_version_id: Mapped[str] = mapped_column(String(36), ForeignKey("problem_versions.id"), index=True, nullable=False)
     language: Mapped[str] = mapped_column(String(32), default="python", nullable=False)
     source_code: Mapped[str] = mapped_column(Text, nullable=False)
@@ -25,6 +25,14 @@ class Submission(Base, UUIDPrimaryKeyMixin, TimestampMixin):
     completed_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
 
     evaluation_runs = relationship("EvaluationRun", back_populates="submission", cascade="all, delete-orphan")
+    organization = relationship("Organization")
+    problem_version = relationship("ProblemVersion")
+    user = relationship("User")
+
+    __table_args__ = (
+        Index("ix_submissions_org_user", "organization_id", "user_id"),
+    )
+
 
 
 class EvaluationRun(Base, UUIDPrimaryKeyMixin, TimestampMixin):

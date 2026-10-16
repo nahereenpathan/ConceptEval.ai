@@ -1,0 +1,1253 @@
+{
+  "source_name": "ConceptEval Pedagogical Problem Library (Expanded Authoritative Curriculum)",
+  "license_type": "CC-BY-4.0",
+  "provenance_url": "https://concepteval.ai/curriculum/authorized-dataset",
+  "problems": [
+    {
+      "title": "Kth Largest Element in an Array via Min-Heap",
+      "slug": "kth-largest-element-min-heap",
+      "difficulty": "medium",
+      "language": "python",
+      "topics": [
+        "heaps",
+        "arrays",
+        "sorting"
+      ],
+      "expected_concepts": [
+        "loop",
+        "function_definition"
+      ],
+      "constraints": [
+        "1 <= k <= len(nums) <= 10^5",
+        "-10^4 <= nums[i] <= 10^4",
+        "Must use heapq or heap data structure"
+      ],
+      "input_format": "Line 1: space-separated integers. Line 2: integer k.",
+      "output_format": "A single integer: the kth largest element.",
+      "statement_markdown": "### Problem Description\nGiven an array of integers and an integer `k`, return the `k`th largest element in the array. Note that it is the `k`th largest element in sorted order, not the `k`th distinct element.\n\n### Concept Requirement\nYou **must** maintain a min-heap of size `k` using Python's `heapq` module to achieve $O(N \\log k)$ time complexity. Sorting the entire array is not allowed.\n\n### Example 1\n**Input:**\n```\n3 2 1 5 6 4\n2\n```\n**Output:**\n```\n5\n```\n",
+      "starter_code": "import sys\nimport heapq\n\ndef find_kth_largest():\n    lines = sys.stdin.read().strip().splitlines()\n    if not lines:\n        return\n    nums = [int(x) for x in lines[0].split()]\n    k = int(lines[1].strip())\n    # TODO: Maintain min-heap of size k\n    heap = []\n    for x in nums:\n        heapq.heappush(heap, x)\n        if len(heap) > k:\n            heapq.heappop(heap)\n    print(heap[0])\n\nif __name__ == '__main__':\n    find_kth_largest()\n",
+      "reference_solution": "import sys\nimport heapq\n\ndef main():\n    lines = sys.stdin.read().strip().splitlines()\n    if not lines:\n        return\n    nums = [int(x) for x in lines[0].split()]\n    k = int(lines[1].strip())\n    heap = []\n    for x in nums:\n        heapq.heappush(heap, x)\n        if len(heap) > k:\n            heapq.heappop(heap)\n    print(heap[0])\n\nif __name__ == '__main__':\n    main()\n",
+      "test_cases": [
+        {
+          "input_data": "3 2 1 5 6 4\n2\n",
+          "expected_output": "5\n",
+          "visibility": "sample",
+          "weight": 1.0
+        },
+        {
+          "input_data": "3 2 3 1 2 4 5 5 6\n4\n",
+          "expected_output": "4\n",
+          "visibility": "public",
+          "weight": 1.0
+        },
+        {
+          "input_data": "7 10 4 3 20 15\n3\n",
+          "expected_output": "10\n",
+          "visibility": "hidden",
+          "weight": 1.0
+        }
+      ],
+      "concept_rules": [
+        {
+          "concept": "loop",
+          "rule_id": "rule_heap_loop",
+          "accepted_constructs": [
+            "For",
+            "While"
+          ],
+          "required": true,
+          "min_occurrences": 1,
+          "description": "Loop required to push elements to heap"
+        }
+      ],
+      "functional_weight": 60.0,
+      "concept_weight": 40.0
+    },
+    {
+      "title": "Merge K Sorted Integer Sequences Using Heap",
+      "slug": "merge-k-sorted-sequences-heap",
+      "difficulty": "hard",
+      "language": "python",
+      "topics": [
+        "heaps",
+        "sorting",
+        "arrays"
+      ],
+      "expected_concepts": [
+        "loop",
+        "function_definition"
+      ],
+      "constraints": [
+        "0 <= k <= 1000",
+        "Total elements across sequences <= 50000",
+        "Each sequence is sorted in ascending order"
+      ],
+      "input_format": "Line 1: integer k. Following k lines: space-separated integers in ascending order.",
+      "output_format": "A single line containing all integers merged in ascending order.",
+      "statement_markdown": "### Problem Description\nYou are given `k` sorted lists of integers. Merge all the sorted lists into one sorted list and print it space-separated.\n\n### Algorithmic Requirement\nYou **must** use a min-heap containing at most `k` items simultaneously (tracking each element, sequence index, and element index) to achieve an optimal $O(N \\log k)$ merge.\n\n### Example 1\n**Input:**\n```\n3\n1 4 5\n1 3 4\n2 6\n```\n**Output:**\n```\n1 1 2 3 4 4 5 6\n```\n",
+      "starter_code": "import sys\nimport heapq\n\ndef merge_k_sorted():\n    lines = sys.stdin.read().strip().splitlines()\n    if not lines:\n        print()\n        return\n    k = int(lines[0].strip())\n    # TODO: Read lists and merge with min-heap\n    pass\n\nif __name__ == '__main__':\n    merge_k_sorted()\n",
+      "reference_solution": "import sys\nimport heapq\n\ndef main():\n    lines = sys.stdin.read().strip().splitlines()\n    if not lines:\n        print()\n        return\n    k = int(lines[0].strip())\n    lists = []\n    for i in range(1, k + 1):\n        if i < len(lines) and lines[i].strip():\n            lists.append([int(x) for x in lines[i].split()])\n        else:\n            lists.append([])\n\n    heap = []\n    for list_idx, lst in enumerate(lists):\n        if lst:\n            heapq.heappush(heap, (lst[0], list_idx, 0))\n\n    result = []\n    while heap:\n        val, list_idx, elem_idx = heapq.heappop(heap)\n        result.append(str(val))\n        if elem_idx + 1 < len(lists[list_idx]):\n            next_val = lists[list_idx][elem_idx + 1]\n            heapq.heappush(heap, (next_val, list_idx, elem_idx + 1))\n\n    print(\" \".join(result))\n\nif __name__ == '__main__':\n    main()\n",
+      "test_cases": [
+        {
+          "input_data": "3\n1 4 5\n1 3 4\n2 6\n",
+          "expected_output": "1 1 2 3 4 4 5 6\n",
+          "visibility": "sample",
+          "weight": 1.0
+        },
+        {
+          "input_data": "2\n10 20 30\n5 15 25\n",
+          "expected_output": "5 10 15 20 25 30\n",
+          "visibility": "public",
+          "weight": 1.0
+        },
+        {
+          "input_data": "1\n42\n",
+          "expected_output": "42\n",
+          "visibility": "hidden",
+          "weight": 1.0
+        }
+      ],
+      "concept_rules": [
+        {
+          "concept": "loop",
+          "rule_id": "rule_while_heap",
+          "accepted_constructs": [
+            "While"
+          ],
+          "required": true,
+          "min_occurrences": 1,
+          "description": "While loop to pop from heap until empty"
+        }
+      ],
+      "functional_weight": 60.0,
+      "concept_weight": 40.0
+    },
+    {
+      "title": "Search in Rotated Sorted Array via Binary Search",
+      "slug": "search-rotated-sorted-array",
+      "difficulty": "medium",
+      "language": "python",
+      "topics": [
+        "binary-search",
+        "arrays",
+        "searching"
+      ],
+      "expected_concepts": [
+        "loop",
+        "conditional"
+      ],
+      "constraints": [
+        "1 <= len(nums) <= 10^5",
+        "All elements are distinct",
+        "Time complexity must be O(log n)"
+      ],
+      "input_format": "Line 1: space-separated integers. Line 2: integer target to find.",
+      "output_format": "0-indexed position of target if found, otherwise -1.",
+      "statement_markdown": "### Problem Description\nGiven an integer array `nums` sorted in ascending order with distinct values, rotated at some pivot unknown to you beforehand, and an integer `target`, return the index of `target` if it is in `nums`, or `-1` if it is not.\n\n### Algorithmic Requirement\nYou **must** write an algorithm with $O(\\log n)$ runtime complexity using modified **binary search**. Linear search $O(n)$ will fail time complexity checks.\n\n### Example 1\n**Input:**\n```\n4 5 6 7 0 1 2\n0\n```\n**Output:**\n```\n4\n```\n",
+      "starter_code": "import sys\n\ndef search_rotated():\n    lines = sys.stdin.read().strip().splitlines()\n    if not lines:\n        return\n    nums = [int(x) for x in lines[0].split()]\n    target = int(lines[1].strip())\n    # TODO: Logarithmic binary search\n    left, right = 0, len(nums) - 1\n    while left <= right:\n        mid = (left + right) // 2\n        if nums[mid] == target:\n            print(mid)\n            return\n        # Identify sorted half\n        if nums[left] <= nums[mid]:\n            if nums[left] <= target < nums[mid]:\n                right = mid - 1\n            else:\n                left = mid + 1\n        else:\n            if nums[mid] < target <= nums[right]:\n                left = mid + 1\n            else:\n                right = mid - 1\n    print(-1)\n\nif __name__ == '__main__':\n    search_rotated()\n",
+      "reference_solution": "import sys\n\ndef main():\n    lines = sys.stdin.read().strip().splitlines()\n    if not lines:\n        return\n    nums = [int(x) for x in lines[0].split()]\n    target = int(lines[1].strip())\n    left, right = 0, len(nums) - 1\n    while left <= right:\n        mid = (left + right) // 2\n        if nums[mid] == target:\n            print(mid)\n            return\n        if nums[left] <= nums[mid]:\n            if nums[left] <= target < nums[mid]:\n                right = mid - 1\n            else:\n                left = mid + 1\n        else:\n            if nums[mid] < target <= nums[right]:\n                left = mid + 1\n            else:\n                right = mid - 1\n    print(-1)\n\nif __name__ == '__main__':\n    main()\n",
+      "test_cases": [
+        {
+          "input_data": "4 5 6 7 0 1 2\n0\n",
+          "expected_output": "4\n",
+          "visibility": "sample",
+          "weight": 1.0
+        },
+        {
+          "input_data": "4 5 6 7 0 1 2\n3\n",
+          "expected_output": "-1\n",
+          "visibility": "public",
+          "weight": 1.0
+        },
+        {
+          "input_data": "1\n0\n",
+          "expected_output": "-1\n",
+          "visibility": "hidden",
+          "weight": 1.0
+        }
+      ],
+      "concept_rules": [
+        {
+          "concept": "loop",
+          "rule_id": "rule_while_binary_search",
+          "accepted_constructs": [
+            "While"
+          ],
+          "required": true,
+          "min_occurrences": 1,
+          "description": "While loop for binary search bounds convergence"
+        }
+      ],
+      "functional_weight": 60.0,
+      "concept_weight": 40.0
+    },
+    {
+      "title": "Integer Square Root via Binary Search",
+      "slug": "integer-square-root-binary-search",
+      "difficulty": "easy",
+      "language": "python",
+      "topics": [
+        "binary-search",
+        "math"
+      ],
+      "expected_concepts": [
+        "loop",
+        "conditional"
+      ],
+      "constraints": [
+        "0 <= x <= 2^31 - 1",
+        "Cannot use built-in math.isqrt or exponentiation operator ** 0.5"
+      ],
+      "input_format": "A single non-negative integer x.",
+      "output_format": "The floor of the square root of x.",
+      "statement_markdown": "### Problem Description\nGiven a non-negative integer `x`, compute and return the square root of `x` rounded down to the nearest integer. The returned integer should be non-negative.\n\n### Concept Requirement\nYou **must** use a binary search loop between `0` and `x`. Do not use Python's built-in `math.sqrt()` or `** 0.5`.\n\n### Example 1\n**Input:**\n```\n8\n```\n**Output:**\n```\n2\n```\n",
+      "starter_code": "import sys\n\ndef my_sqrt():\n    line = sys.stdin.read().strip()\n    if not line:\n        return\n    x = int(line)\n    # TODO: Implement binary search square root\n    pass\n\nif __name__ == '__main__':\n    my_sqrt()\n",
+      "reference_solution": "import sys\n\ndef main():\n    line = sys.stdin.read().strip()\n    if not line:\n        return\n    x = int(line)\n    if x < 2:\n        print(x)\n        return\n    left, right = 1, x // 2\n    ans = 1\n    while left <= right:\n        mid = (left + right) // 2\n        if mid * mid <= x:\n            ans = mid\n            left = mid + 1\n        else:\n            right = mid - 1\n    print(ans)\n\nif __name__ == '__main__':\n    main()\n",
+      "test_cases": [
+        {
+          "input_data": "4\n",
+          "expected_output": "2\n",
+          "visibility": "sample",
+          "weight": 1.0
+        },
+        {
+          "input_data": "8\n",
+          "expected_output": "2\n",
+          "visibility": "public",
+          "weight": 1.0
+        },
+        {
+          "input_data": "25\n",
+          "expected_output": "5\n",
+          "visibility": "hidden",
+          "weight": 1.0
+        }
+      ],
+      "concept_rules": [
+        {
+          "concept": "loop",
+          "rule_id": "rule_binary_search_loop",
+          "accepted_constructs": [
+            "While"
+          ],
+          "required": true,
+          "min_occurrences": 1,
+          "description": "While loop for binary search convergence"
+        }
+      ],
+      "functional_weight": 60.0,
+      "concept_weight": 40.0
+    },
+    {
+      "title": "Activity Selection Maximum Non-Overlapping Intervals",
+      "slug": "activity-selection-max-intervals",
+      "difficulty": "medium",
+      "language": "python",
+      "topics": [
+        "greedy",
+        "sorting",
+        "arrays"
+      ],
+      "expected_concepts": [
+        "loop",
+        "conditional"
+      ],
+      "constraints": [
+        "1 <= N <= 10^5",
+        "Intervals given as start end pairs",
+        "End time >= start time"
+      ],
+      "input_format": "Line 1: integer N. Following N lines: two space-separated integers (start end).",
+      "output_format": "An integer: maximum number of mutually non-overlapping activities.",
+      "statement_markdown": "### Problem Description\nYou are given `N` activities with their start and finish times. Select the maximum number of activities that can be performed by a single person, assuming that a person can only work on a single activity at a time. Two activities are compatible if the start time of the second is greater than or equal to the finish time of the first.\n\n### Algorithmic Requirement\nYou **must** use the greedy choice property by sorting activities by their **finish time**.\n\n### Example 1\n**Input:**\n```\n4\n1 4\n3 5\n0 6\n5 7\n```\n**Output:**\n```\n2\n```\n",
+      "starter_code": "import sys\n\ndef max_activities():\n    lines = sys.stdin.read().strip().splitlines()\n    if not lines:\n        return\n    n = int(lines[0].strip())\n    activities = []\n    for i in range(1, n + 1):\n        s, e = map(int, lines[i].split())\n        activities.append((s, e))\n    # TODO: Greedy interval scheduling\n    pass\n\nif __name__ == '__main__':\n    max_activities()\n",
+      "reference_solution": "import sys\n\ndef main():\n    lines = sys.stdin.read().strip().splitlines()\n    if not lines:\n        return\n    n = int(lines[0].strip())\n    activities = []\n    for i in range(1, n + 1):\n        if i < len(lines) and lines[i].strip():\n            s, e = map(int, lines[i].split())\n            activities.append((s, e))\n\n    # Sort by finish time\n    activities.sort(key=lambda x: x[1])\n\n    count = 0\n    last_end = -1\n    for s, e in activities:\n        if s >= last_end:\n            count += 1\n            last_end = e\n\n    print(count)\n\nif __name__ == '__main__':\n    main()\n",
+      "test_cases": [
+        {
+          "input_data": "4\n1 4\n3 5\n0 6\n5 7\n",
+          "expected_output": "2\n",
+          "visibility": "sample",
+          "weight": 1.0
+        },
+        {
+          "input_data": "3\n10 20\n12 25\n20 30\n",
+          "expected_output": "2\n",
+          "visibility": "public",
+          "weight": 1.0
+        },
+        {
+          "input_data": "1\n1 10\n",
+          "expected_output": "1\n",
+          "visibility": "hidden",
+          "weight": 1.0
+        }
+      ],
+      "concept_rules": [
+        {
+          "concept": "loop",
+          "rule_id": "rule_greedy_loop",
+          "accepted_constructs": [
+            "For"
+          ],
+          "required": true,
+          "min_occurrences": 1,
+          "description": "For loop iterating over sorted intervals"
+        }
+      ],
+      "functional_weight": 60.0,
+      "concept_weight": 40.0
+    },
+    {
+      "title": "Jump Game Minimum Reachable Index Greedy",
+      "slug": "jump-game-reachable-greedy",
+      "difficulty": "medium",
+      "language": "python",
+      "topics": [
+        "greedy",
+        "arrays"
+      ],
+      "expected_concepts": [
+        "loop",
+        "conditional"
+      ],
+      "constraints": [
+        "1 <= len(nums) <= 10^5",
+        "0 <= nums[i] <= 10^5"
+      ],
+      "input_format": "A single line of space-separated integers representing jump capacities.",
+      "output_format": "'true' if the last index is reachable, otherwise 'false'.",
+      "statement_markdown": "### Problem Description\nYou are given an integer array `nums`. You are initially positioned at the array's first index, and each element in the array represents your maximum jump length at that position. Return `true` if you can reach the last index, or `false` otherwise.\n\n### Algorithmic Requirement\nYou **must** solve this in $O(N)$ time and $O(1)$ extra space using a greedy traversal tracking the furthest reachable index.\n\n### Example 1\n**Input:**\n```\n2 3 1 1 4\n```\n**Output:**\n```\ntrue\n```\n",
+      "starter_code": "import sys\n\ndef can_jump():\n    raw = sys.stdin.read().strip()\n    if not raw:\n        print(\"true\")\n        return\n    nums = [int(x) for x in raw.split()]\n    # TODO: Greedy reachability check\n    pass\n\nif __name__ == '__main__':\n    can_jump()\n",
+      "reference_solution": "import sys\n\ndef main():\n    raw = sys.stdin.read().strip()\n    if not raw:\n        print(\"true\")\n        return\n    nums = [int(x) for x in raw.split()]\n    max_reach = 0\n    for i, jump in enumerate(nums):\n        if i > max_reach:\n            print(\"false\")\n            return\n        if i + jump > max_reach:\n            max_reach = i + jump\n        if max_reach >= len(nums) - 1:\n            print(\"true\")\n            return\n    print(\"true\" if max_reach >= len(nums) - 1 else \"false\")\n\nif __name__ == '__main__':\n    main()\n",
+      "test_cases": [
+        {
+          "input_data": "2 3 1 1 4\n",
+          "expected_output": "true\n",
+          "visibility": "sample",
+          "weight": 1.0
+        },
+        {
+          "input_data": "3 2 1 0 4\n",
+          "expected_output": "false\n",
+          "visibility": "public",
+          "weight": 1.0
+        },
+        {
+          "input_data": "0\n",
+          "expected_output": "true\n",
+          "visibility": "hidden",
+          "weight": 1.0
+        }
+      ],
+      "concept_rules": [
+        {
+          "concept": "loop",
+          "rule_id": "rule_jump_loop",
+          "accepted_constructs": [
+            "For"
+          ],
+          "required": true,
+          "min_occurrences": 1,
+          "description": "For loop inspecting jump limits"
+        }
+      ],
+      "functional_weight": 60.0,
+      "concept_weight": 40.0
+    },
+    {
+      "title": "Generate All Balanced Parentheses Combinations",
+      "slug": "generate-balanced-parentheses-backtracking",
+      "difficulty": "medium",
+      "language": "python",
+      "topics": [
+        "backtracking",
+        "recursion",
+        "strings"
+      ],
+      "expected_concepts": [
+        "recursion",
+        "function_definition"
+      ],
+      "constraints": [
+        "1 <= n <= 8",
+        "Output combinations must be printed in alphabetical order"
+      ],
+      "input_format": "A single integer n.",
+      "output_format": "Each balanced combination on its own line.",
+      "statement_markdown": "### Problem Description\nGiven `n` pairs of parentheses, write a function to generate all combinations of well-formed parentheses.\n\n### Concept Requirement\nYou **must** use a recursive **backtracking** helper function that maintains open and close counts and prunes invalid prefixes.\n\n### Example 1\n**Input:**\n```\n3\n```\n**Output:**\n```\n((()))\n(()())\n(())()\n()(())\n()()()\n```\n",
+      "starter_code": "import sys\n\ndef generate_parentheses():\n    line = sys.stdin.read().strip()\n    if not line:\n        return\n    n = int(line)\n    # TODO: Backtracking recursion\n    pass\n\nif __name__ == '__main__':\n    generate_parentheses()\n",
+      "reference_solution": "import sys\n\ndef main():\n    line = sys.stdin.read().strip()\n    if not line:\n        return\n    n = int(line)\n    results = []\n\n    def backtrack(curr, open_count, close_count):\n        if len(curr) == 2 * n:\n            results.append(curr)\n            return\n        if open_count < n:\n            backtrack(curr + \"(\", open_count + 1, close_count)\n        if close_count < open_count:\n            backtrack(curr + \")\", open_count, close_count + 1)\n\n    backtrack(\"\", 0, 0)\n    for res in sorted(results):\n        print(res)\n\nif __name__ == '__main__':\n    main()\n",
+      "test_cases": [
+        {
+          "input_data": "1\n",
+          "expected_output": "()\n",
+          "visibility": "sample",
+          "weight": 1.0
+        },
+        {
+          "input_data": "2\n",
+          "expected_output": "(())\n()()\n",
+          "visibility": "public",
+          "weight": 1.0
+        },
+        {
+          "input_data": "3\n",
+          "expected_output": "((()))\n(()())\n(())()\n()(())\n()()()\n",
+          "visibility": "hidden",
+          "weight": 1.0
+        }
+      ],
+      "concept_rules": [
+        {
+          "concept": "recursion",
+          "rule_id": "rule_backtrack_recursion",
+          "required": true,
+          "min_occurrences": 1,
+          "description": "Must use recursive backtracking helper"
+        }
+      ],
+      "functional_weight": 60.0,
+      "concept_weight": 40.0
+    },
+    {
+      "title": "N-Queens Valid Placement Count",
+      "slug": "n-queens-placement-count-backtracking",
+      "difficulty": "hard",
+      "language": "python",
+      "topics": [
+        "backtracking",
+        "recursion"
+      ],
+      "expected_concepts": [
+        "recursion",
+        "function_definition"
+      ],
+      "constraints": [
+        "1 <= n <= 10"
+      ],
+      "input_format": "A single integer n representing the board dimension.",
+      "output_format": "An integer: the total number of distinct solutions to the n-queens puzzle.",
+      "statement_markdown": "### Problem Description\nThe `n`-queens puzzle is the problem of placing `n` queens on an `n x n` chessboard such that no two queens attack each other. Given an integer `n`, return the number of distinct solutions to the `n`-queens puzzle.\n\n### Concept Requirement\nYou **must** use recursive backtracking with column, diagonal, and anti-diagonal attack sets for $O(1)$ conflict lookups.\n\n### Example 1\n**Input:**\n```\n4\n```\n**Output:**\n```\n2\n```\n",
+      "starter_code": "import sys\n\ndef total_n_queens():\n    line = sys.stdin.read().strip()\n    if not line:\n        return\n    n = int(line)\n    # TODO: Backtracking N-Queens\n    pass\n\nif __name__ == '__main__':\n    total_n_queens()\n",
+      "reference_solution": "import sys\n\ndef main():\n    line = sys.stdin.read().strip()\n    if not line:\n        return\n    n = int(line)\n    cols = set()\n    diag1 = set()  # r - c\n    diag2 = set()  # r + c\n    count = 0\n\n    def backtrack(r):\n        nonlocal count\n        if r == n:\n            count += 1\n            return\n        for c in range(n):\n            if c in cols or (r - c) in diag1 or (r + c) in diag2:\n                continue\n            cols.add(c)\n            diag1.add(r - c)\n            diag2.add(r + c)\n            backtrack(r + 1)\n            cols.remove(c)\n            diag1.remove(r - c)\n            diag2.remove(r + c)\n\n    backtrack(0)\n    print(count)\n\nif __name__ == '__main__':\n    main()\n",
+      "test_cases": [
+        {
+          "input_data": "4\n",
+          "expected_output": "2\n",
+          "visibility": "sample",
+          "weight": 1.0
+        },
+        {
+          "input_data": "1\n",
+          "expected_output": "1\n",
+          "visibility": "public",
+          "weight": 1.0
+        },
+        {
+          "input_data": "5\n",
+          "expected_output": "10\n",
+          "visibility": "hidden",
+          "weight": 1.0
+        }
+      ],
+      "concept_rules": [
+        {
+          "concept": "recursion",
+          "rule_id": "rule_nqueens_recursion",
+          "required": true,
+          "min_occurrences": 1,
+          "description": "Recursive backtracking placement"
+        }
+      ],
+      "functional_weight": 60.0,
+      "concept_weight": 40.0
+    },
+    {
+      "title": "Count Connected Grid Island Components via DFS",
+      "slug": "count-connected-grid-islands-dfs",
+      "difficulty": "medium",
+      "language": "python",
+      "topics": [
+        "graphs",
+        "recursion",
+        "arrays"
+      ],
+      "expected_concepts": [
+        "recursion",
+        "function_definition"
+      ],
+      "constraints": [
+        "1 <= R, C <= 100",
+        "Grid contains only '1' (land) and '0' (water)",
+        "Adjacent cells horizontal or vertical only"
+      ],
+      "input_format": "Line 1: R C (rows and columns). Next R lines: C characters without spaces ('1' or '0').",
+      "output_format": "An integer: the number of distinct islands.",
+      "statement_markdown": "### Problem Description\nGiven an `R x C` 2D binary grid which represents a map of `'1'`s (land) and `'0'`s (water), return the number of islands. An island is surrounded by water and is formed by connecting adjacent lands horizontally or vertically.\n\n### Concept Requirement\nYou **must** use depth-first search (**DFS**) recursion to traverse and flood-fill each visited island component.\n\n### Example 1\n**Input:**\n```\n4 5\n11110\n11010\n11000\n00000\n```\n**Output:**\n```\n1\n```\n",
+      "starter_code": "import sys\n\ndef count_islands():\n    lines = sys.stdin.read().strip().splitlines()\n    if not lines:\n        print(0)\n        return\n    r, c = map(int, lines[0].split())\n    grid = [list(lines[i + 1].strip()) for i in range(r)]\n    # TODO: DFS recursion to count connected components\n    pass\n\nif __name__ == '__main__':\n    count_islands()\n",
+      "reference_solution": "import sys\n\n# Increase recursion depth for deep grids\nsys.setrecursionlimit(20000)\n\ndef main():\n    lines = sys.stdin.read().strip().splitlines()\n    if not lines:\n        print(0)\n        return\n    r, c = map(int, lines[0].split())\n    grid = [list(lines[i + 1].strip()) for i in range(r)]\n\n    def dfs(i, j):\n        if i < 0 or i >= r or j < 0 or j >= c or grid[i][j] != '1':\n            return\n        grid[i][j] = '0'  # Mark visited\n        dfs(i + 1, j)\n        dfs(i - 1, j)\n        dfs(i, j + 1)\n        dfs(i, j - 1)\n\n    islands = 0\n    for i in range(r):\n        for j in range(c):\n            if grid[i][j] == '1':\n                islands += 1\n                dfs(i, j)\n\n    print(islands)\n\nif __name__ == '__main__':\n    main()\n",
+      "test_cases": [
+        {
+          "input_data": "4 5\n11110\n11010\n11000\n00000\n",
+          "expected_output": "1\n",
+          "visibility": "sample",
+          "weight": 1.0
+        },
+        {
+          "input_data": "4 5\n11000\n11000\n00100\n00011\n",
+          "expected_output": "3\n",
+          "visibility": "public",
+          "weight": 1.0
+        },
+        {
+          "input_data": "1 1\n0\n",
+          "expected_output": "0\n",
+          "visibility": "hidden",
+          "weight": 1.0
+        }
+      ],
+      "concept_rules": [
+        {
+          "concept": "recursion",
+          "rule_id": "rule_dfs_flood_fill",
+          "required": true,
+          "min_occurrences": 1,
+          "description": "Must use recursive DFS for graph traversal"
+        }
+      ],
+      "functional_weight": 60.0,
+      "concept_weight": 40.0
+    },
+    {
+      "title": "Shortest Path in Unweighted Maze Grid via BFS",
+      "slug": "shortest-path-maze-grid-bfs",
+      "difficulty": "medium",
+      "language": "python",
+      "topics": [
+        "graphs",
+        "queues",
+        "searching"
+      ],
+      "expected_concepts": [
+        "loop",
+        "conditional"
+      ],
+      "constraints": [
+        "1 <= R, C <= 100",
+        "0 is open, 1 is obstacle",
+        "Path starts at (0, 0) and ends at (R-1, C-1)"
+      ],
+      "input_format": "Line 1: R C. Next R lines: C space-separated integers (0 or 1).",
+      "output_format": "Minimum number of steps to reach destination, or -1 if unreachable.",
+      "statement_markdown": "### Problem Description\nGiven an `R x C` binary maze where `0` represents an empty cell and `1` represents an obstacle, find the shortest path length from top-left `(0, 0)` to bottom-right `(R-1, C-1)`. You can move up, down, left, or right.\n\n### Concept Requirement\nYou **must** use breadth-first search (**BFS**) with a queue (`collections.deque`) to guarantee shortest path optimality in an unweighted graph.\n\n### Example 1\n**Input:**\n```\n3 3\n0 0 0\n1 1 0\n1 1 0\n```\n**Output:**\n```\n4\n```\n",
+      "starter_code": "import sys\nfrom collections import deque\n\ndef shortest_path():\n    lines = sys.stdin.read().strip().splitlines()\n    if not lines:\n        return\n    r, c = map(int, lines[0].split())\n    grid = [[int(x) for x in lines[i + 1].split()] for i in range(r)]\n    # TODO: BFS queue for shortest path\n    pass\n\nif __name__ == '__main__':\n    shortest_path()\n",
+      "reference_solution": "import sys\nfrom collections import deque\n\ndef main():\n    lines = sys.stdin.read().strip().splitlines()\n    if not lines:\n        print(-1)\n        return\n    r, c = map(int, lines[0].split())\n    grid = [[int(x) for x in lines[i + 1].split()] for i in range(r)]\n\n    if grid[0][0] == 1 or grid[r - 1][c - 1] == 1:\n        print(-1)\n        return\n\n    queue = deque([(0, 0, 0)])  # (row, col, distance)\n    visited = {(0, 0)}\n\n    while queue:\n        row, col, dist = queue.popleft()\n        if row == r - 1 and col == c - 1:\n            print(dist)\n            return\n\n        for dr, dc in [(-1, 0), (1, 0), (0, -1), (0, 1)]:\n            nr, nc = row + dr, col + dc\n            if 0 <= nr < r and 0 <= nc < c and grid[nr][nc] == 0 and (nr, nc) not in visited:\n                visited.add((nr, nc))\n                queue.append((nr, nc, dist + 1))\n\n    print(-1)\n\nif __name__ == '__main__':\n    main()\n",
+      "test_cases": [
+        {
+          "input_data": "3 3\n0 0 0\n1 1 0\n1 1 0\n",
+          "expected_output": "4\n",
+          "visibility": "sample",
+          "weight": 1.0
+        },
+        {
+          "input_data": "2 2\n0 1\n1 0\n",
+          "expected_output": "-1\n",
+          "visibility": "public",
+          "weight": 1.0
+        },
+        {
+          "input_data": "1 1\n0\n",
+          "expected_output": "0\n",
+          "visibility": "hidden",
+          "weight": 1.0
+        }
+      ],
+      "concept_rules": [
+        {
+          "concept": "loop",
+          "rule_id": "rule_bfs_while",
+          "accepted_constructs": [
+            "While"
+          ],
+          "required": true,
+          "min_occurrences": 1,
+          "description": "While loop processing queue states"
+        }
+      ],
+      "functional_weight": 60.0,
+      "concept_weight": 40.0
+    },
+    {
+      "title": "Single Non-Duplicate Element via Bitwise XOR",
+      "slug": "single-non-duplicate-element-xor",
+      "difficulty": "easy",
+      "language": "python",
+      "topics": [
+        "bit-manipulation",
+        "arrays"
+      ],
+      "expected_concepts": [
+        "loop"
+      ],
+      "constraints": [
+        "1 <= len(nums) <= 10^5",
+        "Every element appears twice except for one",
+        "Must operate in O(n) time and O(1) space"
+      ],
+      "input_format": "A single line containing space-separated integers.",
+      "output_format": "The single integer that appears only once.",
+      "statement_markdown": "### Problem Description\nGiven a non-empty array of integers `nums`, every element appears twice except for one. Find that single one.\n\n### Concept Requirement\nYou **must** use the bitwise XOR operator (`^`) to identify the unique number in $O(n)$ time and $O(1)$ memory. Using hash sets or sorting is prohibited.\n\n### Example 1\n**Input:**\n```\n4 1 2 1 2\n```\n**Output:**\n```\n4\n```\n",
+      "starter_code": "import sys\n\ndef single_number():\n    raw = sys.stdin.read().strip()\n    if not raw:\n        return\n    nums = [int(x) for x in raw.split()]\n    # TODO: Bitwise XOR accumulator\n    res = 0\n    for x in nums:\n        res ^= x\n    print(res)\n\nif __name__ == '__main__':\n    single_number()\n",
+      "reference_solution": "import sys\n\ndef main():\n    raw = sys.stdin.read().strip()\n    if not raw:\n        return\n    nums = [int(x) for x in raw.split()]\n    res = 0\n    for x in nums:\n        res ^= x\n    print(res)\n\nif __name__ == '__main__':\n    main()\n",
+      "test_cases": [
+        {
+          "input_data": "2 2 1\n",
+          "expected_output": "1\n",
+          "visibility": "sample",
+          "weight": 1.0
+        },
+        {
+          "input_data": "4 1 2 1 2\n",
+          "expected_output": "4\n",
+          "visibility": "public",
+          "weight": 1.0
+        },
+        {
+          "input_data": "100\n",
+          "expected_output": "100\n",
+          "visibility": "hidden",
+          "weight": 1.0
+        }
+      ],
+      "concept_rules": [
+        {
+          "concept": "loop",
+          "rule_id": "rule_xor_accumulation",
+          "accepted_constructs": [
+            "For"
+          ],
+          "required": true,
+          "min_occurrences": 1,
+          "description": "For loop accumulating bitwise XOR values"
+        }
+      ],
+      "functional_weight": 60.0,
+      "concept_weight": 40.0
+    },
+    {
+      "title": "Hamming Weight Counting Set Bits via Bitwise Shifts",
+      "slug": "hamming-weight-counting-set-bits",
+      "difficulty": "easy",
+      "language": "python",
+      "topics": [
+        "bit-manipulation",
+        "math"
+      ],
+      "expected_concepts": [
+        "loop",
+        "conditional"
+      ],
+      "constraints": [
+        "0 <= n <= 2^31 - 1",
+        "Cannot use bin().count('1')"
+      ],
+      "input_format": "A single positive integer.",
+      "output_format": "The number of set bits (1s) in its binary representation.",
+      "statement_markdown": "### Problem Description\nWrite a function that takes the binary representation of a positive integer and returns the number of set bits it has (also known as the Hamming weight).\n\n### Concept Requirement\nYou **must** use bitwise operators (such as `n & (n - 1)` or `n & 1` with right shifts `>>`). Using string conversion or `bin().count('1')` is prohibited.\n\n### Example 1\n**Input:**\n```\n11\n```\n**Output:**\n```\n3\n```\n*Explanation: 11 in binary is 1011, which has 3 set bits.*\n",
+      "starter_code": "import sys\n\ndef hamming_weight():\n    line = sys.stdin.read().strip()\n    if not line:\n        return\n    n = int(line)\n    # TODO: Bitwise set bit counter\n    count = 0\n    while n > 0:\n        n &= (n - 1)\n        count += 1\n    print(count)\n\nif __name__ == '__main__':\n    hamming_weight()\n",
+      "reference_solution": "import sys\n\ndef main():\n    line = sys.stdin.read().strip()\n    if not line:\n        return\n    n = int(line)\n    count = 0\n    while n > 0:\n        n &= (n - 1)\n        count += 1\n    print(count)\n\nif __name__ == '__main__':\n    main()\n",
+      "test_cases": [
+        {
+          "input_data": "11\n",
+          "expected_output": "3\n",
+          "visibility": "sample",
+          "weight": 1.0
+        },
+        {
+          "input_data": "128\n",
+          "expected_output": "1\n",
+          "visibility": "public",
+          "weight": 1.0
+        },
+        {
+          "input_data": "2147483645\n",
+          "expected_output": "30\n",
+          "visibility": "hidden",
+          "weight": 1.0
+        }
+      ],
+      "concept_rules": [
+        {
+          "concept": "loop",
+          "rule_id": "rule_bitwise_while",
+          "accepted_constructs": [
+            "While"
+          ],
+          "required": true,
+          "min_occurrences": 1,
+          "description": "While loop checking bits until zero"
+        }
+      ],
+      "functional_weight": 60.0,
+      "concept_weight": 40.0
+    },
+    {
+      "title": "Relational Inner Join Table Simulation",
+      "slug": "relational-inner-join-simulation",
+      "difficulty": "easy",
+      "language": "python",
+      "topics": [
+        "sql",
+        "hashing",
+        "arrays"
+      ],
+      "expected_concepts": [
+        "loop",
+        "conditional"
+      ],
+      "constraints": [
+        "Output rows sorted by ID in ascending order",
+        "Simulates SQL SELECT A.id, A.val, B.dept FROM A JOIN B ON A.id = B.id"
+      ],
+      "input_format": "Line 1: N M (counts of rows in tables A and B). Next N lines: `id val`. Next M lines: `id dept`.",
+      "output_format": "Matched rows sorted by ID: `id val dept` per line.",
+      "statement_markdown": "### Problem Description\nSimulate an SQL **INNER JOIN** between two relational tables `TableA(id, val)` and `TableB(id, dept)` on the primary key `id`. Return matching tuples formatted as `id val dept`, sorted by `id` ascending.\n\n### SQL Equivalent\n```sql\nSELECT A.id, A.val, B.dept\nFROM TableA A\nJOIN TableB B ON A.id = B.id\nORDER BY A.id ASC;\n```\n\n### Concept Requirement\nYou **must** use a dictionary/hash map index on one table to achieve an efficient $O(N + M)$ hash join.\n\n### Example 1\n**Input:**\n```\n3 2\n1 Alice\n2 Bob\n3 Charlie\n1 Engineering\n3 Research\n```\n**Output:**\n```\n1 Alice Engineering\n3 Charlie Research\n```\n",
+      "starter_code": "import sys\n\ndef simulate_join():\n    lines = sys.stdin.read().strip().splitlines()\n    if not lines:\n        return\n    n, m = map(int, lines[0].split())\n    # TODO: Build hash index and perform join\n    pass\n\nif __name__ == '__main__':\n    simulate_join()\n",
+      "reference_solution": "import sys\n\ndef main():\n    lines = sys.stdin.read().strip().splitlines()\n    if not lines:\n        return\n    n, m = map(int, lines[0].split())\n    table_a = {}\n    for i in range(1, n + 1):\n        parts = lines[i].split()\n        table_a[int(parts[0])] = parts[1]\n\n    table_b = {}\n    for j in range(n + 1, n + 1 + m):\n        parts = lines[j].split()\n        table_b[int(parts[0])] = parts[1]\n\n    matches = []\n    for k in sorted(table_a.keys()):\n        if k in table_b:\n            matches.append(f\"{k} {table_a[k]} {table_b[k]}\")\n\n    for row in matches:\n        print(row)\n\nif __name__ == '__main__':\n    main()\n",
+      "test_cases": [
+        {
+          "input_data": "3 2\n1 Alice\n2 Bob\n3 Charlie\n1 Engineering\n3 Research\n",
+          "expected_output": "1 Alice Engineering\n3 Charlie Research\n",
+          "visibility": "sample",
+          "weight": 1.0
+        },
+        {
+          "input_data": "1 1\n5 Alpha\n5 Omega\n",
+          "expected_output": "5 Alpha Omega\n",
+          "visibility": "public",
+          "weight": 1.0
+        },
+        {
+          "input_data": "2 1\n10 X\n20 Y\n99 Z\n",
+          "expected_output": "",
+          "visibility": "hidden",
+          "weight": 1.0
+        }
+      ],
+      "concept_rules": [
+        {
+          "concept": "loop",
+          "rule_id": "rule_join_iteration",
+          "accepted_constructs": [
+            "For"
+          ],
+          "required": true,
+          "min_occurrences": 1,
+          "description": "For loop matching keys across relational records"
+        }
+      ],
+      "functional_weight": 60.0,
+      "concept_weight": 40.0
+    },
+    {
+      "title": "Relational Group By and Aggregate Simulation",
+      "slug": "relational-group-by-aggregate-simulation",
+      "difficulty": "medium",
+      "language": "python",
+      "topics": [
+        "sql",
+        "hashing"
+      ],
+      "expected_concepts": [
+        "loop",
+        "conditional"
+      ],
+      "constraints": [
+        "Output sorted alphabetically by category name",
+        "Simulates SQL SELECT category, COUNT(*), SUM(amount) GROUP BY category"
+      ],
+      "input_format": "Line 1: N. Following N lines: `category amount`.",
+      "output_format": "Grouped rows: `category count sum` sorted by category.",
+      "statement_markdown": "### Problem Description\nSimulate an SQL **GROUP BY** aggregation query. Given a transaction log of `N` rows with `category` and integer `amount`, group the records by category and output the category name, total count of transactions, and total sum of amounts.\n\n### SQL Equivalent\n```sql\nSELECT category, COUNT(*) AS cnt, SUM(amount) AS total\nFROM Transactions\nGROUP BY category\nORDER BY category ASC;\n```\n\n### Concept Requirement\nYou **must** aggregate groups using a dictionary mapping each unique category to its running count and total.\n\n### Example 1\n**Input:**\n```\n4\nBooks 15\nElectronics 100\nBooks 25\nFood 10\n```\n**Output:**\n```\nBooks 2 40\nElectronics 1 100\nFood 1 10\n```\n",
+      "starter_code": "import sys\n\ndef group_by_aggregate():\n    lines = sys.stdin.read().strip().splitlines()\n    if not lines:\n        return\n    n = int(lines[0].strip())\n    # TODO: Implement GROUP BY category with count and sum\n    pass\n\nif __name__ == '__main__':\n    group_by_aggregate()\n",
+      "reference_solution": "import sys\n\ndef main():\n    lines = sys.stdin.read().strip().splitlines()\n    if not lines:\n        return\n    n = int(lines[0].strip())\n    groups = {}\n    for i in range(1, n + 1):\n        if i < len(lines) and lines[i].strip():\n            cat, amt = lines[i].split()\n            amt_val = int(amt)\n            if cat not in groups:\n                groups[cat] = [0, 0]  # [count, sum]\n            groups[cat][0] += 1\n            groups[cat][1] += amt_val\n\n    for cat in sorted(groups.keys()):\n        print(f\"{cat} {groups[cat][0]} {groups[cat][1]}\")\n\nif __name__ == '__main__':\n    main()\n",
+      "test_cases": [
+        {
+          "input_data": "4\nBooks 15\nElectronics 100\nBooks 25\nFood 10\n",
+          "expected_output": "Books 2 40\nElectronics 1 100\nFood 1 10\n",
+          "visibility": "sample",
+          "weight": 1.0
+        },
+        {
+          "input_data": "2\nOffice 5\nOffice 7\n",
+          "expected_output": "Office 2 12\n",
+          "visibility": "public",
+          "weight": 1.0
+        },
+        {
+          "input_data": "1\nMusic 30\n",
+          "expected_output": "Music 1 30\n",
+          "visibility": "hidden",
+          "weight": 1.0
+        }
+      ],
+      "concept_rules": [
+        {
+          "concept": "loop",
+          "rule_id": "rule_groupby_loop",
+          "accepted_constructs": [
+            "For"
+          ],
+          "required": true,
+          "min_occurrences": 1,
+          "description": "For loop reading rows and accumulating aggregates"
+        }
+      ],
+      "functional_weight": 60.0,
+      "concept_weight": 40.0
+    },
+    {
+      "title": "Longest Common Subsequence of Two Strings",
+      "slug": "longest-common-subsequence-dp",
+      "difficulty": "hard",
+      "language": "python",
+      "topics": [
+        "dynamic-programming",
+        "strings"
+      ],
+      "expected_concepts": [
+        "nested_loop",
+        "conditional"
+      ],
+      "constraints": [
+        "1 <= len(text1), len(text2) <= 1000",
+        "Must solve in O(M * N) time using DP matrix"
+      ],
+      "input_format": "Line 1: string text1. Line 2: string text2.",
+      "output_format": "An integer: the length of their longest common subsequence.",
+      "statement_markdown": "### Problem Description\nGiven two strings `text1` and `text2`, return the length of their longest common subsequence. If there is no common subsequence, return `0`. A subsequence of a string is a new string generated from the original string with some characters (can be none) deleted without changing the relative order of the remaining characters.\n\n### Concept Requirement\nYou **must** use a 2D dynamic programming grid with nested loops ($O(M \\times N)$) to tabulate optimal subproblems.\n\n### Example 1\n**Input:**\n```\nabcde\nace\n```\n**Output:**\n```\n3\n```\n*Explanation: The longest common subsequence is \"ace\" and its length is 3.*\n",
+      "starter_code": "import sys\n\ndef longest_common_subsequence():\n    lines = sys.stdin.read().strip().splitlines()\n    if len(lines) < 2:\n        print(0)\n        return\n    text1, text2 = lines[0].strip(), lines[1].strip()\n    # TODO: 2D Dynamic Programming matrix\n    pass\n\nif __name__ == '__main__':\n    longest_common_subsequence()\n",
+      "reference_solution": "import sys\n\ndef main():\n    lines = sys.stdin.read().strip().splitlines()\n    if len(lines) < 2:\n        print(0)\n        return\n    s1, s2 = lines[0].strip(), lines[1].strip()\n    m, n = len(s1), len(s2)\n    dp = [[0] * (n + 1) for _ in range(m + 1)]\n\n    for i in range(1, m + 1):\n        for j in range(1, n + 1):\n            if s1[i - 1] == s2[j - 1]:\n                dp[i][j] = dp[i - 1][j - 1] + 1\n            else:\n                dp[i][j] = max(dp[i - 1][j], dp[i][j - 1])\n\n    print(dp[m][n])\n\nif __name__ == '__main__':\n    main()\n",
+      "test_cases": [
+        {
+          "input_data": "abcde\nace\n",
+          "expected_output": "3\n",
+          "visibility": "sample",
+          "weight": 1.0
+        },
+        {
+          "input_data": "abc\nabc\n",
+          "expected_output": "3\n",
+          "visibility": "public",
+          "weight": 1.0
+        },
+        {
+          "input_data": "abc\ndef\n",
+          "expected_output": "0\n",
+          "visibility": "hidden",
+          "weight": 1.0
+        }
+      ],
+      "concept_rules": [
+        {
+          "concept": "nested_loop",
+          "rule_id": "rule_2d_dp_loops",
+          "required": true,
+          "min_occurrences": 1,
+          "description": "Nested loops filling dynamic programming table"
+        }
+      ],
+      "functional_weight": 60.0,
+      "concept_weight": 40.0
+    },
+    {
+      "title": "Coin Change Fewest Coins Dynamic Programming",
+      "slug": "coin-change-fewest-coins-dp",
+      "difficulty": "medium",
+      "language": "python",
+      "topics": [
+        "dynamic-programming",
+        "arrays"
+      ],
+      "expected_concepts": [
+        "nested_loop",
+        "conditional"
+      ],
+      "constraints": [
+        "1 <= len(coins) <= 12",
+        "1 <= coins[i] <= 10^4",
+        "0 <= amount <= 10^4"
+      ],
+      "input_format": "Line 1: space-separated coin denominations. Line 2: integer target amount.",
+      "output_format": "Fewest number of coins needed to make up amount, or -1 if impossible.",
+      "statement_markdown": "### Problem Description\nYou are given an integer array `coins` representing coins of different denominations and an integer `amount` representing a total amount of money. Return the fewest number of coins that you need to make up that amount. If that amount of money cannot be made up by any combination of the coins, return `-1`.\n\n### Concept Requirement\nYou **must** solve this using bottom-up 1D dynamic programming tabulation.\n\n### Example 1\n**Input:**\n```\n1 2 5\n11\n```\n**Output:**\n```\n3\n```\n*Explanation: 11 = 5 + 5 + 1.*\n",
+      "starter_code": "import sys\n\ndef coin_change():\n    lines = sys.stdin.read().strip().splitlines()\n    if not lines:\n        return\n    coins = [int(x) for x in lines[0].split()]\n    amount = int(lines[1].strip())\n    # TODO: DP array\n    pass\n\nif __name__ == '__main__':\n    coin_change()\n",
+      "reference_solution": "import sys\n\ndef main():\n    lines = sys.stdin.read().strip().splitlines()\n    if not lines:\n        return\n    coins = [int(x) for x in lines[0].split()]\n    amount = int(lines[1].strip())\n\n    dp = [float('inf')] * (amount + 1)\n    dp[0] = 0\n\n    for a in range(1, amount + 1):\n        for c in coins:\n            if a - c >= 0 and dp[a - c] != float('inf'):\n                if dp[a - c] + 1 < dp[a]:\n                    dp[a] = dp[a - c] + 1\n\n    print(-1 if dp[amount] == float('inf') else dp[amount])\n\nif __name__ == '__main__':\n    main()\n",
+      "test_cases": [
+        {
+          "input_data": "1 2 5\n11\n",
+          "expected_output": "3\n",
+          "visibility": "sample",
+          "weight": 1.0
+        },
+        {
+          "input_data": "2\n3\n",
+          "expected_output": "-1\n",
+          "visibility": "public",
+          "weight": 1.0
+        },
+        {
+          "input_data": "1\n0\n",
+          "expected_output": "0\n",
+          "visibility": "hidden",
+          "weight": 1.0
+        }
+      ],
+      "concept_rules": [
+        {
+          "concept": "nested_loop",
+          "rule_id": "rule_dp_nested_loop",
+          "required": true,
+          "min_occurrences": 1,
+          "description": "Nested loop iterating amounts and coin choices"
+        }
+      ],
+      "functional_weight": 60.0,
+      "concept_weight": 40.0
+    },
+    {
+      "title": "Largest Rectangle in Histogram via Monotonic Stack",
+      "slug": "largest-rectangle-histogram-monotonic-stack",
+      "difficulty": "hard",
+      "language": "python",
+      "topics": [
+        "stacks",
+        "arrays"
+      ],
+      "expected_concepts": [
+        "loop",
+        "conditional"
+      ],
+      "constraints": [
+        "1 <= len(heights) <= 10^5",
+        "0 <= heights[i] <= 10^4",
+        "Time complexity must be O(N)"
+      ],
+      "input_format": "A single line containing space-separated non-negative bar heights.",
+      "output_format": "An integer: the area of the largest rectangle in the histogram.",
+      "statement_markdown": "### Problem Description\nGiven an array of integers `heights` representing the histogram's bar height where the width of each bar is `1`, return the area of the largest rectangle in the histogram.\n\n### Algorithmic Requirement\nYou **must** use an explicit **monotonic increasing stack** of indices to compute the maximal area in linear $O(N)$ time. An $O(N^2)$ brute force approach will time out.\n\n### Example 1\n**Input:**\n```\n2 1 5 6 2 3\n```\n**Output:**\n```\n10\n```\n",
+      "starter_code": "import sys\n\ndef largest_rectangle_area():\n    raw = sys.stdin.read().strip()\n    if not raw:\n        print(0)\n        return\n    heights = [int(x) for x in raw.split()]\n    # TODO: Monotonic stack calculation\n    pass\n\nif __name__ == '__main__':\n    largest_rectangle_area()\n",
+      "reference_solution": "import sys\n\ndef main():\n    raw = sys.stdin.read().strip()\n    if not raw:\n        print(0)\n        return\n    heights = [int(x) for x in raw.split()]\n    stack = []\n    max_area = 0\n    heights.append(0)\n\n    for i, h in enumerate(heights):\n        while stack and heights[stack[-1]] > h:\n            top_idx = stack.pop()\n            height = heights[top_idx]\n            width = i if not stack else (i - stack[-1] - 1)\n            max_area = max(max_area, height * width)\n        stack.append(i)\n\n    print(max_area)\n\nif __name__ == '__main__':\n    main()\n",
+      "test_cases": [
+        {
+          "input_data": "2 1 5 6 2 3\n",
+          "expected_output": "10\n",
+          "visibility": "sample",
+          "weight": 1.0
+        },
+        {
+          "input_data": "2 4\n",
+          "expected_output": "4\n",
+          "visibility": "public",
+          "weight": 1.0
+        },
+        {
+          "input_data": "1\n",
+          "expected_output": "1\n",
+          "visibility": "hidden",
+          "weight": 1.0
+        }
+      ],
+      "concept_rules": [
+        {
+          "concept": "loop",
+          "rule_id": "rule_histogram_loop",
+          "accepted_constructs": [
+            "For"
+          ],
+          "required": true,
+          "min_occurrences": 1,
+          "description": "For loop iterating over heights with inner monotonic stack"
+        }
+      ],
+      "functional_weight": 60.0,
+      "concept_weight": 40.0
+    },
+    {
+      "title": "Evaluate Reverse Polish Notation Arithmetic Stack",
+      "slug": "evaluate-reverse-polish-notation-stack",
+      "difficulty": "medium",
+      "language": "python",
+      "topics": [
+        "stacks",
+        "math"
+      ],
+      "expected_concepts": [
+        "loop",
+        "conditional"
+      ],
+      "constraints": [
+        "Tokens consist of valid integers and operators (+, -, *, /)",
+        "Division between integers truncates toward zero"
+      ],
+      "input_format": "A single line of space-separated tokens in postfix notation.",
+      "output_format": "The single integer result of evaluating the arithmetic expression.",
+      "statement_markdown": "### Problem Description\nEvaluate the value of an arithmetic expression in Reverse Polish Notation (RPN). Valid operators are `+`, `-`, `*`, and `/`. Each operand may be an integer or another expression. Note that division between two integers should truncate toward zero.\n\n### Concept Requirement\nYou **must** evaluate the postfix expression using a last-in-first-out **stack** data structure (`list.append` and `list.pop`).\n\n### Example 1\n**Input:**\n```\n2 1 + 3 *\n```\n**Output:**\n```\n9\n```\n*Explanation: ((2 + 1) * 3) = 9.*\n",
+      "starter_code": "import sys\n\ndef eval_rpn():\n    raw = sys.stdin.read().strip()\n    if not raw:\n        return\n    tokens = raw.split()\n    # TODO: Evaluate with stack\n    pass\n\nif __name__ == '__main__':\n    eval_rpn()\n",
+      "reference_solution": "import sys\n\ndef main():\n    raw = sys.stdin.read().strip()\n    if not raw:\n        return\n    tokens = raw.split()\n    stack = []\n\n    for token in tokens:\n        if token == \"+\":\n            b, a = stack.pop(), stack.pop()\n            stack.append(a + b)\n        elif token == \"-\":\n            b, a = stack.pop(), stack.pop()\n            stack.append(a - b)\n        elif token == \"*\":\n            b, a = stack.pop(), stack.pop()\n            stack.append(a * b)\n        elif token == \"/\":\n            b, a = stack.pop(), stack.pop()\n            # Truncation toward zero in Python\n            stack.append(int(a / b))\n        else:\n            stack.append(int(token))\n\n    print(stack[0])\n\nif __name__ == '__main__':\n    main()\n",
+      "test_cases": [
+        {
+          "input_data": "2 1 + 3 *\n",
+          "expected_output": "9\n",
+          "visibility": "sample",
+          "weight": 1.0
+        },
+        {
+          "input_data": "4 13 5 / +\n",
+          "expected_output": "6\n",
+          "visibility": "public",
+          "weight": 1.0
+        },
+        {
+          "input_data": "10 6 9 3 + -11 * / * 17 + 5 +\n",
+          "expected_output": "22\n",
+          "visibility": "hidden",
+          "weight": 1.0
+        }
+      ],
+      "concept_rules": [
+        {
+          "concept": "loop",
+          "rule_id": "rule_rpn_token_loop",
+          "accepted_constructs": [
+            "For"
+          ],
+          "required": true,
+          "min_occurrences": 1,
+          "description": "For loop processing expression tokens"
+        }
+      ],
+      "functional_weight": 60.0,
+      "concept_weight": 40.0
+    },
+    {
+      "title": "Least Recently Used (LRU) Cache Class Implementation",
+      "slug": "lru-cache-class-implementation",
+      "difficulty": "hard",
+      "language": "python",
+      "topics": [
+        "oop",
+        "hashing",
+        "linked-lists"
+      ],
+      "expected_concepts": [
+        "oop_class",
+        "function_definition"
+      ],
+      "constraints": [
+        "1 <= capacity <= 3000",
+        "0 <= key, value <= 10^4",
+        "Both get and put operations must run in O(1) average time"
+      ],
+      "input_format": "Line 1: capacity. Following lines: operation commands: `put key val` or `get key`.",
+      "output_format": "Each `get` call outputs its return value on a new line.",
+      "statement_markdown": "### Problem Description\nDesign a data structure that follows the constraints of a **Least Recently Used (LRU) Cache**.\nImplement the `LRUCache` class:\n- `LRUCache(int capacity)`: Initialize the LRU cache with positive size `capacity`.\n- `int get(int key)`: Return the value of the `key` if the key exists, otherwise return `-1`.\n- `void put(int key, int value)`: Update the value of the `key` if the `key` exists. Otherwise, add the `key-value` pair to the cache. If the number of keys exceeds the `capacity` from this operation, evict the least recently used key.\n\n### Concept Requirement\nYou **must** implement a Python `class` containing `__init__`, `get`, and `put` methods. Both operations must achieve $O(1)$ time complexity using an ordered dictionary or hash map + doubly linked list.\n\n### Example 1\n**Input:**\n```\n2\nput 1 1\nput 2 2\nget 1\nput 3 3\nget 2\nput 4 4\nget 1\nget 3\nget 4\n```\n**Output:**\n```\n1\n-1\n-1\n3\n4\n```\n",
+      "starter_code": "import sys\nfrom collections import OrderedDict\n\nclass LRUCache:\n    def __init__(self, capacity: int):\n        self.capacity = capacity\n        self.cache = OrderedDict()\n\n    def get(self, key: int) -> int:\n        # TODO: Implement get with O(1) eviction tracking\n        pass\n\n    def put(self, key: int, value: int) -> None:\n        # TODO: Implement put with O(1) eviction\n        pass\n\nif __name__ == '__main__':\n    lines = sys.stdin.read().strip().splitlines()\n    if not lines:\n        sys.exit(0)\n    cap = int(lines[0].strip())\n    lru = LRUCache(cap)\n    for cmd in lines[1:]:\n        parts = cmd.split()\n        if parts[0] == 'put':\n            lru.put(int(parts[1]), int(parts[2]))\n        elif parts[0] == 'get':\n            print(lru.get(int(parts[1])))\n",
+      "reference_solution": "import sys\nfrom collections import OrderedDict\n\nclass LRUCache:\n    def __init__(self, capacity: int):\n        self.capacity = capacity\n        self.cache = OrderedDict()\n\n    def get(self, key: int) -> int:\n        if key not in self.cache:\n            return -1\n        self.cache.move_to_end(key)\n        return self.cache[key]\n\n    def put(self, key: int, value: int) -> None:\n        if key in self.cache:\n            self.cache.move_to_end(key)\n        self.cache[key] = value\n        if len(self.cache) > self.capacity:\n            self.cache.popitem(last=False)\n\ndef main():\n    lines = sys.stdin.read().strip().splitlines()\n    if not lines:\n        return\n    cap = int(lines[0].strip())\n    lru = LRUCache(cap)\n    for line in lines[1:]:\n        parts = line.strip().split()\n        if not parts:\n            continue\n        if parts[0] == \"put\":\n            lru.put(int(parts[1]), int(parts[2]))\n        elif parts[0] == \"get\":\n            print(lru.get(int(parts[1])))\n\nif __name__ == '__main__':\n    main()\n",
+      "test_cases": [
+        {
+          "input_data": "2\nput 1 1\nput 2 2\nget 1\nput 3 3\nget 2\nput 4 4\nget 1\nget 3\nget 4\n",
+          "expected_output": "1\n-1\n-1\n3\n4\n",
+          "visibility": "sample",
+          "weight": 1.0
+        },
+        {
+          "input_data": "1\nput 10 100\nget 10\nput 20 200\nget 10\nget 20\n",
+          "expected_output": "100\n-1\n200\n",
+          "visibility": "public",
+          "weight": 1.0
+        }
+      ],
+      "concept_rules": [
+        {
+          "concept": "oop_class",
+          "rule_id": "rule_lru_class",
+          "required": true,
+          "min_occurrences": 1,
+          "description": "Must define custom LRUCache class"
+        }
+      ],
+      "functional_weight": 60.0,
+      "concept_weight": 40.0
+    },
+    {
+      "title": "Longest Substring Without Repeating Characters Sliding Window",
+      "slug": "longest-substring-without-repeating-characters",
+      "difficulty": "medium",
+      "language": "python",
+      "topics": [
+        "strings",
+        "hashing"
+      ],
+      "expected_concepts": [
+        "loop",
+        "conditional"
+      ],
+      "constraints": [
+        "0 <= s.length <= 5 * 10^4",
+        "s consists of English letters, digits, symbols and spaces"
+      ],
+      "input_format": "A single line containing the string s.",
+      "output_format": "An integer: the length of the longest substring without repeating characters.",
+      "statement_markdown": "### Problem Description\nGiven a string `s`, find the length of the longest substring without duplicate characters.\n\n### Concept Requirement\nYou **must** use a **sliding window** with a hash set or dictionary to track character positions in $O(N)$ time.\n\n### Example 1\n**Input:**\n```\nabcabcbb\n```\n**Output:**\n```\n3\n```\n*Explanation: The answer is \"abc\", with the length of 3.*\n",
+      "starter_code": "import sys\n\ndef length_of_longest_substring():\n    line = sys.stdin.read().rstrip('\\r\\n')\n    if not line:\n        print(0)\n        return\n    # TODO: Sliding window with hash map\n    pass\n\nif __name__ == '__main__':\n    length_of_longest_substring()\n",
+      "reference_solution": "import sys\n\ndef main():\n    line = sys.stdin.read().rstrip('\\r\\n')\n    if not line:\n        print(0)\n        return\n    char_map = {}\n    left = 0\n    max_len = 0\n    for right, ch in enumerate(line):\n        if ch in char_map and char_map[ch] >= left:\n            left = char_map[ch] + 1\n        char_map[ch] = right\n        max_len = max(max_len, right - left + 1)\n    print(max_len)\n\nif __name__ == '__main__':\n    main()\n",
+      "test_cases": [
+        {
+          "input_data": "abcabcbb\n",
+          "expected_output": "3\n",
+          "visibility": "sample",
+          "weight": 1.0
+        },
+        {
+          "input_data": "bbbbb\n",
+          "expected_output": "1\n",
+          "visibility": "public",
+          "weight": 1.0
+        },
+        {
+          "input_data": "pwwkew\n",
+          "expected_output": "3\n",
+          "visibility": "hidden",
+          "weight": 1.0
+        }
+      ],
+      "concept_rules": [
+        {
+          "concept": "loop",
+          "rule_id": "rule_sliding_window_loop",
+          "accepted_constructs": [
+            "For"
+          ],
+          "required": true,
+          "min_occurrences": 1,
+          "description": "For loop expanding sliding window"
+        }
+      ],
+      "functional_weight": 60.0,
+      "concept_weight": 40.0
+    },
+    {
+      "title": "Group Anagrams by Canonical Frequency Key",
+      "slug": "group-anagrams-canonical-key",
+      "difficulty": "medium",
+      "language": "python",
+      "topics": [
+        "strings",
+        "hashing",
+        "sorting"
+      ],
+      "expected_concepts": [
+        "loop",
+        "function_definition"
+      ],
+      "constraints": [
+        "1 <= len(strs) <= 10^4",
+        "Output groups sorted alphabetically by first word, each group sorted alphabetically"
+      ],
+      "input_format": "A single line of space-separated lowercase words.",
+      "output_format": "Each anagram group printed on its own line sorted alphabetically.",
+      "statement_markdown": "### Problem Description\nGiven an array of strings `strs`, group the anagrams together. You can return the answer in any order, but for deterministic verification, print each group sorted alphabetically, with the groups themselves printed in alphabetical order according to their first element.\n\n### Concept Requirement\nYou **must** use a dictionary mapping canonical sorted character signatures (`tuple(sorted(word))` or character count tuples) to lists of words.\n\n### Example 1\n**Input:**\n```\neat tea tan ate nat bat\n```\n**Output:**\n```\nate eat tea\nbat\nnat tan\n```\n",
+      "starter_code": "import sys\nfrom collections import defaultdict\n\ndef group_anagrams():\n    raw = sys.stdin.read().strip()\n    if not raw:\n        return\n    words = raw.split()\n    # TODO: Group by canonical signature\n    pass\n\nif __name__ == '__main__':\n    group_anagrams()\n",
+      "reference_solution": "import sys\nfrom collections import defaultdict\n\ndef main():\n    raw = sys.stdin.read().strip()\n    if not raw:\n        return\n    words = raw.split()\n    groups = defaultdict(list)\n    for w in words:\n        key = \"\".join(sorted(w))\n        groups[key].append(w)\n\n    result = []\n    for g in groups.values():\n        result.append(sorted(g))\n\n    result.sort(key=lambda x: x[0])\n    for g in result:\n        print(\" \".join(g))\n\nif __name__ == '__main__':\n    main()\n",
+      "test_cases": [
+        {
+          "input_data": "eat tea tan ate nat bat\n",
+          "expected_output": "ate eat tea\nbat\nnat tan\n",
+          "visibility": "sample",
+          "weight": 1.0
+        },
+        {
+          "input_data": "a\n",
+          "expected_output": "a\n",
+          "visibility": "public",
+          "weight": 1.0
+        },
+        {
+          "input_data": "listen silent enlisted inlets\n",
+          "expected_output": "enlisted\ninlets listen silent\n",
+          "visibility": "hidden",
+          "weight": 1.0
+        }
+      ],
+      "concept_rules": [
+        {
+          "concept": "loop",
+          "rule_id": "rule_anagram_group_loop",
+          "accepted_constructs": [
+            "For"
+          ],
+          "required": true,
+          "min_occurrences": 1,
+          "description": "For loop grouping words into dictionary"
+        }
+      ],
+      "functional_weight": 60.0,
+      "concept_weight": 40.0
+    },
+    {
+      "title": "Prime Numbers Sieve of Eratosthenes",
+      "slug": "prime-numbers-sieve-eratosthenes",
+      "difficulty": "medium",
+      "language": "python",
+      "topics": [
+        "math",
+        "arrays"
+      ],
+      "expected_concepts": [
+        "nested_loop",
+        "conditional"
+      ],
+      "constraints": [
+        "2 <= N <= 10^5",
+        "Must implement true Sieve of Eratosthenes boolean array"
+      ],
+      "input_format": "A single integer N.",
+      "output_format": "All prime numbers <= N space-separated in ascending order.",
+      "statement_markdown": "### Problem Description\nGiven an integer `N`, return all prime numbers less than or equal to `N` in ascending order.\n\n### Algorithmic Requirement\nYou **must** implement the classical **Sieve of Eratosthenes** using a boolean array marking composites in $O(N \\log \\log N)$ time. Individual trial division per number is prohibited.\n\n### Example 1\n**Input:**\n```\n10\n```\n**Output:**\n```\n2 3 5 7\n```\n",
+      "starter_code": "import sys\n\ndef sieve():\n    line = sys.stdin.read().strip()\n    if not line:\n        return\n    n = int(line)\n    # TODO: Sieve of Eratosthenes\n    pass\n\nif __name__ == '__main__':\n    sieve()\n",
+      "reference_solution": "import sys\n\ndef main():\n    line = sys.stdin.read().strip()\n    if not line:\n        return\n    n = int(line)\n    if n < 2:\n        print()\n        return\n    is_prime = [True] * (n + 1)\n    is_prime[0] = is_prime[1] = False\n    p = 2\n    while p * p <= n:\n        if is_prime[p]:\n            for i in range(p * p, n + 1, p):\n                is_prime[i] = False\n        p += 1\n\n    primes = [str(i) for i in range(2, n + 1) if is_prime[i]]\n    print(\" \".join(primes))\n\nif __name__ == '__main__':\n    main()\n",
+      "test_cases": [
+        {
+          "input_data": "10\n",
+          "expected_output": "2 3 5 7\n",
+          "visibility": "sample",
+          "weight": 1.0
+        },
+        {
+          "input_data": "20\n",
+          "expected_output": "2 3 5 7 11 13 17 19\n",
+          "visibility": "public",
+          "weight": 1.0
+        },
+        {
+          "input_data": "2\n",
+          "expected_output": "2\n",
+          "visibility": "hidden",
+          "weight": 1.0
+        }
+      ],
+      "concept_rules": [
+        {
+          "concept": "nested_loop",
+          "rule_id": "rule_sieve_marking_loop",
+          "required": true,
+          "min_occurrences": 1,
+          "description": "Nested loop marking non-prime multiples"
+        }
+      ],
+      "functional_weight": 60.0,
+      "concept_weight": 40.0
+    }
+  ]
+}

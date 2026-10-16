@@ -79,11 +79,32 @@ async def seed():
         session.add_all([mem_teacher, mem_student])
 
         print("🏷️ Creating problem topics...")
-        topic_loops = ProblemTopic(name="Loops & Iteration", slug="loops")
-        topic_recursion = ProblemTopic(name="Recursion", slug="recursion")
-        topic_comp = ProblemTopic(name="Comprehensions", slug="comprehensions")
-        session.add_all([topic_loops, topic_recursion, topic_comp])
+        standard_topics = [
+            ("Loops & Iteration", "loops"),
+            ("Recursion", "recursion"),
+            ("Comprehensions", "comprehensions"),
+            ("Arrays", "arrays"),
+            ("Strings", "strings"),
+            ("Hashing & Maps", "hashing"),
+            ("Sorting", "sorting"),
+            ("Searching", "searching"),
+            ("Functions", "functions"),
+            ("Linked Lists", "linked-lists"),
+            ("Stacks", "stacks"),
+            ("Queues", "queues"),
+            ("Trees", "trees"),
+            ("Graphs", "graphs"),
+            ("Dynamic Programming", "dynamic-programming"),
+            ("OOP & Classes", "oop"),
+            ("Math", "math"),
+        ]
+        topic_entities = [ProblemTopic(name=name, slug=slug) for name, slug in standard_topics]
+        session.add_all(topic_entities)
         await session.flush()
+        topic_loops = next(t for t in topic_entities if t.slug == "loops")
+        topic_recursion = next(t for t in topic_entities if t.slug == "recursion")
+        topic_comp = next(t for t in topic_entities if t.slug == "comprehensions")
+
 
         # Problem 1: Print Hello World Exactly 4 Times with a Loop
         print("📘 Creating Problem 1: Loop Print Hello World...")

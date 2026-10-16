@@ -2,7 +2,7 @@
 Authentication & User Request/Response Schemas
 """
 
-from typing import Optional
+from typing import List, Optional
 from pydantic import BaseModel, EmailStr, Field
 
 
@@ -28,8 +28,21 @@ class RefreshTokenRequest(BaseModel):
     refresh_token: str
 
 
+class OrganizationMembershipResponse(BaseModel):
+    organization_id: str
+    organization_name: str
+    role: str
+    status: str
+
+
 class UserProfileResponse(BaseModel):
     id: str
     email: str
     display_name: str
     status: str
+    memberships: List[OrganizationMembershipResponse] = []
+
+
+class LogoutResponse(BaseModel):
+    message: str
+
